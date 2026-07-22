@@ -5,4 +5,10 @@
 .env
 .env.local
 
+# Python virtualenv (shared at repo root across week1_baseline/python/* steps)
+.venv/
+*.egg-info/
+__pycache__/
+*.pyc
+
 ~/node_modules
