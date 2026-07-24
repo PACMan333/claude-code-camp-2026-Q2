@@ -19,7 +19,12 @@
 
 require "json"
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+# Run either from a git checkout (bin/ and lib/ are siblings) or as an
+# installed gem (RubyGems puts mud_manager's lib on the load path for us).
+# Prepend the sibling lib only when it's actually there, so the checkout
+# case works without a `gem install` and the installed case is unaffected.
+sibling_lib = File.expand_path("../lib", __dir__)
+$LOAD_PATH.unshift(sibling_lib) if File.directory?(sibling_lib) && !$LOAD_PATH.include?(sibling_lib)
 require "mud_manager"
 
 module MudManagerMcp
@@ -440,6 +445,40 @@ module MudManagerMcp
       handle(msg)
     end
   end
+
+  USAGE = <<~USAGE
+    mud-manager — a CircleMUD session exposed over MCP (stdio, JSON-RPC 2.0).
+
+    Usage:
+      mud-manager --mcp        Start the MCP server, reading JSON-RPC requests
+                               from stdin and writing responses to stdout. This
+                               is how any-language MCP host connects: spawn this
+                               process, handshake, tools/list, tools/call.
+      mud-manager --help       Show this message.
+
+    The MUD connection is opened lazily on the first tool call, using:
+      MUD_HOST      (default localhost)
+      MUD_PORT      (default 4000)
+      MUD_NAME      required to log in
+      MUD_PASSWORD  required to log in
+
+    Credentials travel by environment, per the stdio MCP transport convention.
+  USAGE
+
+  def self.main(argv)
+    if argv.include?("--help") || argv.include?("-h")
+      puts USAGE
+      return 0
+    end
+
+    unless argv.include?("--mcp")
+      warn USAGE
+      return 1
+    end
+
+    run
+    0
+  end
 end
 
-MudManagerMcp.run if $PROGRAM_NAME == __FILE__
+exit(MudManagerMcp.main(ARGV)) if $PROGRAM_NAME == __FILE__

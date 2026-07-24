@@ -11,7 +11,14 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 3.0"
 
-  spec.files = Dir["lib/**/*.rb"]
+  spec.files = Dir["lib/**/*.rb"] + ["bin/mud-manager"]
 
-  # No external dependencies — socket and thread are stdlib.
+  # `mud-manager --mcp` is the cross-language interface: a long-lived MCP
+  # server (stdio, JSON-RPC 2.0) that any language can spawn and drive. See
+  # README.md ("The MCP interface"). Installing the gem puts `mud-manager`
+  # on the PATH.
+  spec.bindir      = "bin"
+  spec.executables = ["mud-manager"]
+
+  # No external dependencies — socket, thread, json, and open3 are stdlib.
 end

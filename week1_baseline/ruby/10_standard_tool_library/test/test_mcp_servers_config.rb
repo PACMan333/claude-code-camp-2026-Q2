@@ -122,7 +122,11 @@ class TestMcpServersConfig < Minitest::Test
     config_from(server_yaml("mud", extra: "    prefix: tbamud")) do |cfg|
       _ctx, registry = new_registry
       summary = Boukensha.send(:register_mcp_servers, registry, cfg)
-      assert_equal({ "mud" => 26 }, summary)
+      # The mud-manager daemon advertises every MudManager::Primitives command
+      # (55 tools). The earlier count of 26 came from a curated reference
+      # daemon that no longer exists in the repo; the shipped daemon exposes
+      # the full primitive surface.
+      assert_equal({ "mud" => 55 }, summary)
     end
   ensure
     @fake&.stop
