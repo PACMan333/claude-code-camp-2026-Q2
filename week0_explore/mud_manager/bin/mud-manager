@@ -1,0 +1,445 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+#
+# mud-manager --mcp
+#
+# A minimal MCP-over-stdio server exposing MudManager::Primitives as tools,
+# backed by a single MudManager::Session opened lazily on the first tool
+# call (so `tools/list` still works before any MUD connection is attempted).
+# Credentials travel by environment, per the stdio MCP transport convention:
+#
+#   MUD_HOST      default "localhost"
+#   MUD_PORT      default 4000
+#   MUD_NAME      required to log in
+#   MUD_PASSWORD  required to log in
+#
+# Speaks JSON-RPC 2.0, one message per line, on stdin/stdout. Only the
+# methods Boukensha::Mcp::Client actually sends are implemented: initialize,
+# notifications/initialized, tools/list, tools/call.
+
+require "json"
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "mud_manager"
+
+module MudManagerMcp
+  SERVER_NAME = "mud-manager"
+  SERVER_VERSION = "0.1.0"
+
+  P = MudManager::Primitives
+
+  # Each entry: name, description, an ordered list of param specs, and a
+  # build lambda that turns a string-keyed args hash into a
+  # MudManager::Primitives::Command. Param spec keys: :name, :type
+  # ("string"/"integer"), :required, :enum (optional), :description,
+  # :default (optional, used when the argument is omitted).
+  TOOLS = [
+    # ---------- Perception (look first: the most fundamental action) ----------
+    { name: "look", description: "Look around the room you are currently in, or examine a specific " \
+                                  "object/character/direction. To see the room itself (its name, " \
+                                  "description, exits, and contents) call this with NO arguments at " \
+                                  "all — do not pass target: \"room\" or similar, there is no object " \
+                                  "literally named \"room\" to look at. Only set target (and " \
+                                  "optionally preposition) when looking at something specific, e.g. " \
+                                  "target: \"sword\" or preposition: \"north\" with no target to peek " \
+                                  "in a direction.",
+      params: [
+        { name: "mode", type: "string", required: false, enum: P::LOOK_MODES, default: "look", description: "look or read" },
+        { name: "target", type: "string", required: false,
+          description: "A specific object, character, or exit to look at — omit this entirely to " \
+                        "just see the room you're in (never pass \"room\"/\"here\"/\"surroundings\")" },
+        { name: "preposition", type: "string", required: false, enum: P::LOOK_PREPS, description: "in/at/direction" }
+      ],
+      call: ->(a) {
+        target = a["target"]
+        # A model occasionally asks to "look at room"/"look at here" when it
+        # actually just wants the room description — there's no such object
+        # on a real MUD, so treat these as the no-argument, whole-room look.
+        target = nil if target && %w[room here surroundings around myself].include?(target.strip.downcase)
+        preposition = target.nil? ? nil : a["preposition"]
+        P.look(mode: a.fetch("mode", "look"), target: target, preposition: preposition)
+      } },
+
+    # ---------- Movement & posture ----------
+    { name: "move", description: "Move in a direction.",
+      params: [{ name: "direction", type: "string", required: true, enum: P::DIRECTIONS, description: "Direction to move" }],
+      call: ->(a) { P.move(a["direction"]) } },
+    { name: "enter", description: "Enter a portal, vehicle, or building by keyword.",
+      params: [{ name: "keyword", type: "string", required: false, description: "What to enter" }],
+      call: ->(a) { P.enter(a["keyword"]) } },
+    { name: "leave", description: "Leave the current vehicle or enclosed place.",
+      params: [], call: ->(_a) { P.leave } },
+    { name: "set_position", description: "Change your posture (stand, sit, rest, sleep, wake).",
+      params: [{ name: "pos", type: "string", required: true, enum: P::POSITIONS, description: "Target posture" }],
+      call: ->(a) { P.set_position(a["pos"]) } },
+    { name: "follow", description: "Follow another character, or stop following with no argument.",
+      params: [{ name: "leader", type: "string", required: false, description: "Who to follow" }],
+      call: ->(a) { P.follow(a["leader"]) } },
+    { name: "flee", description: "Flee combat in a random direction.",
+      params: [], call: ->(_a) { P.flee } },
+    { name: "track", description: "Track a victim's trail.",
+      params: [{ name: "victim", type: "string", required: true, description: "Who to track" }],
+      call: ->(a) { P.track(a["victim"]) } },
+
+    # ---------- Combat ----------
+    { name: "attack", description: "Attack a target. Defaults to a plain fight (kill) if no style is given.",
+      params: [
+        { name: "style", type: "string", required: false, enum: P::ATTACK_STYLES, default: "kill", description: "Attack style" },
+        { name: "target", type: "string", required: true, description: "Who to attack" }
+      ],
+      call: ->(a) { P.attack(a.fetch("style", "kill"), a["target"]) } },
+    { name: "skill_strike", description: "Use a combat skill (backstab, bash, kick, rescue, assist) on a target.",
+      params: [
+        { name: "skill", type: "string", required: true, enum: P::STRIKE_SKILLS, description: "Skill to use" },
+        { name: "target", type: "string", required: true, description: "Who to target" }
+      ],
+      call: ->(a) { P.skill_strike(a["skill"], a["target"]) } },
+    { name: "order", description: "Order a follower or charmed creature to do something.",
+      params: [
+        { name: "who", type: "string", required: true, description: "Who to order" },
+        { name: "command", type: "string", required: true, description: "What to order them to do" }
+      ],
+      call: ->(a) { P.order(a["who"], a["command"]) } },
+    { name: "insult", description: "Insult a target.",
+      params: [{ name: "target", type: "string", required: true, description: "Who to insult" }],
+      call: ->(a) { P.insult(a["target"]) } },
+
+    # ---------- Communication ----------
+    { name: "say_local", description: "Speak to the room (say, emote, or reply to the last tell).",
+      params: [
+        { name: "mode", type: "string", required: true, enum: P::LOCAL_SAY, description: "How to speak" },
+        { name: "text", type: "string", required: true, description: "What to say" }
+      ],
+      call: ->(a) { P.say_local(a["mode"], a["text"]) } },
+    { name: "say_targeted", description: "Speak directly to one character (tell, whisper, or ask).",
+      params: [
+        { name: "mode", type: "string", required: true, enum: P::TARGETED_SAY, description: "How to speak" },
+        { name: "target", type: "string", required: true, description: "Who to address" },
+        { name: "text", type: "string", required: true, description: "What to say" }
+      ],
+      call: ->(a) { P.say_targeted(a["mode"], a["target"], a["text"]) } },
+    { name: "say_channel", description: "Speak on a global channel (shout, gossip, auction, grats, holler).",
+      params: [
+        { name: "channel", type: "string", required: true, enum: P::CHANNELS, description: "Channel to use" },
+        { name: "text", type: "string", required: true, description: "What to say" }
+      ],
+      call: ->(a) { P.say_channel(a["channel"], a["text"]) } },
+    { name: "say_group", description: "Speak to your group.",
+      params: [{ name: "text", type: "string", required: true, description: "What to say" }],
+      call: ->(a) { P.say_group(a["text"]) } },
+    { name: "say_quest", description: "Speak on the quest channel.",
+      params: [{ name: "text", type: "string", required: true, description: "What to say" }],
+      call: ->(a) { P.say_quest(a["text"]) } },
+    { name: "report_player", description: "Report a bug, typo, or idea to the immortals.",
+      params: [
+        { name: "kind", type: "string", required: true, enum: P::REPORT_KINDS, description: "Kind of report" },
+        { name: "text", type: "string", required: true, description: "Report text" }
+      ],
+      call: ->(a) { P.report_player(a["kind"], a["text"]) } },
+    { name: "write_note", description: "Write on a piece of paper, optionally with a named pen.",
+      params: [
+        { name: "paper", type: "string", required: true, description: "The paper item" },
+        { name: "pen", type: "string", required: false, description: "The pen item" }
+      ],
+      call: ->(a) { P.write_note(a["paper"], a["pen"]) } },
+
+    # ---------- Inventory & objects ----------
+    { name: "get", description: "Pick up an object, optionally from a container, optionally a count of them.",
+      params: [
+        { name: "obj", type: "string", required: true, description: "Object to get" },
+        { name: "container", type: "string", required: false, description: "Container to get it from" },
+        { name: "count", type: "integer", required: false, description: "How many" }
+      ],
+      call: ->(a) { P.get(a["obj"], container: a["container"], count: a["count"]) } },
+    { name: "drop", description: "Drop, donate, or junk an object.",
+      params: [
+        { name: "mode", type: "string", required: true, enum: P::DROP_MODES, description: "Drop mode" },
+        { name: "obj", type: "string", required: true, description: "Object to drop" },
+        { name: "count", type: "integer", required: false, description: "How many" }
+      ],
+      call: ->(a) { P.drop(a["mode"], a["obj"], count: a["count"]) } },
+    { name: "put", description: "Put an object into a container.",
+      params: [
+        { name: "obj", type: "string", required: true, description: "Object to put" },
+        { name: "container", type: "string", required: true, description: "Container" },
+        { name: "count", type: "integer", required: false, description: "How many" }
+      ],
+      call: ->(a) { P.put(a["obj"], a["container"], count: a["count"]) } },
+    { name: "give", description: "Give an object to another character.",
+      params: [
+        { name: "obj", type: "string", required: true, description: "Object to give" },
+        { name: "target", type: "string", required: true, description: "Who to give it to" },
+        { name: "count", type: "integer", required: false, description: "How many" }
+      ],
+      call: ->(a) { P.give(a["obj"], a["target"], count: a["count"]) } },
+    { name: "equip", description: "Wear, wield, hold, grab, or remove equipment.",
+      params: [
+        { name: "slot_op", type: "string", required: true, enum: P::EQUIP_OPS, description: "Equip operation" },
+        { name: "obj", type: "string", required: true, description: "Object" },
+        { name: "body_loc", type: "string", required: false, description: "Body location" }
+      ],
+      call: ->(a) { P.equip(a["slot_op"], a["obj"], body_loc: a["body_loc"]) } },
+    { name: "consume", description: "Eat, taste, drink, or sip something.",
+      params: [
+        { name: "mode", type: "string", required: true, enum: P::CONSUME_MODES, description: "Consume mode" },
+        { name: "obj", type: "string", required: true, description: "Object to consume" }
+      ],
+      call: ->(a) { P.consume(a["mode"], a["obj"]) } },
+    { name: "transfer_liquid", description: "Pour or fill a liquid between containers.",
+      params: [
+        { name: "mode", type: "string", required: true, enum: P::LIQUID_MODES, description: "Liquid transfer mode" },
+        { name: "from", type: "string", required: true, description: "Source" },
+        { name: "to", type: "string", required: true, description: "Destination" }
+      ],
+      call: ->(a) { P.transfer_liquid(a["mode"], a["from"], a["to"]) } },
+    { name: "split_gold", description: "Split gold with your group.",
+      params: [{ name: "amount", type: "integer", required: true, description: "Amount to split" }],
+      call: ->(a) { P.split_gold(a["amount"]) } },
+
+    # ---------- Doors ----------
+    { name: "door", description: "Open, close, lock, unlock, or pick a door or container.",
+      params: [
+        { name: "verb", type: "string", required: true, enum: P::DOOR_VERBS, description: "Door action" },
+        { name: "target", type: "string", required: true, description: "Door or container" },
+        { name: "direction", type: "string", required: false, enum: P::DIRECTIONS, description: "Direction, if the target is a door" }
+      ],
+      call: ->(a) { P.door(a["verb"], a["target"], direction: a["direction"]) } },
+
+    # ---------- Perception & info (look is defined first, above) ----------
+    { name: "examine", description: "Examine an object or character closely.",
+      params: [{ name: "target", type: "string", required: true, description: "What to examine" }],
+      call: ->(a) { P.examine(a["target"]) } },
+    { name: "info_self", description: "Check your own status (score, inventory, equipment, gold, exits, time, weather, levels, wimpy, toggle, where).",
+      params: [{ name: "kind", type: "string", required: true, enum: P::INFO_SELF, description: "What to check" }],
+      call: ->(a) { P.info_self(a["kind"]) } },
+    { name: "info_world", description: "Check world/server info (who, users, help, credits, news, motd, policies, version, wizlist, immlist, clear, whoami).",
+      params: [
+        { name: "kind", type: "string", required: true, enum: P::INFO_WORLD, description: "What to check" },
+        { name: "filter", type: "string", required: false, description: "Optional filter/argument" }
+      ],
+      call: ->(a) { P.info_world(a["kind"], filter: a["filter"]) } },
+    { name: "consider", description: "Consider how tough a target looks.",
+      params: [{ name: "target", type: "string", required: true, description: "Who to consider" }],
+      call: ->(a) { P.consider(a["target"]) } },
+    { name: "diagnose", description: "Diagnose yourself or a target's health.",
+      params: [{ name: "target", type: "string", required: false, description: "Who to diagnose" }],
+      call: ->(a) { P.diagnose(a["target"]) } },
+    { name: "list_commands", description: "List available commands or socials.",
+      params: [
+        { name: "kind", type: "string", required: true, enum: P::LIST_KINDS, description: "commands or socials" },
+        { name: "player", type: "string", required: false, description: "Filter by player" }
+      ],
+      call: ->(a) { P.list_commands(a["kind"], player: a["player"]) } },
+
+    # ---------- Character / preferences / lifecycle ----------
+    { name: "social", description: "Perform a social action (e.g. smile, wave), optionally at a target.",
+      params: [
+        { name: "name", type: "string", required: true, description: "Social action name" },
+        { name: "target", type: "string", required: false, description: "Who to target" }
+      ],
+      call: ->(a) { P.social(a["name"], target: a["target"]) } },
+    { name: "set_title", description: "Set your character's title.",
+      params: [{ name: "text", type: "string", required: true, description: "New title" }],
+      call: ->(a) { P.set_title(a["text"]) } },
+    { name: "set_display", description: "Set your prompt display tokens.",
+      params: [{ name: "tokens", type: "string", required: true, description: "Display tokens" }],
+      call: ->(a) { P.set_display(a["tokens"]) } },
+    { name: "set_color", description: "Set your color level (off, sparse, normal, complete).",
+      params: [{ name: "level", type: "string", required: true, enum: P::COLOR_LEVELS, description: "Color level" }],
+      call: ->(a) { P.set_color(a["level"]) } },
+    { name: "set_wimpy", description: "Set the HP threshold below which you auto-flee.",
+      params: [{ name: "hp", type: "integer", required: true, description: "HP threshold" }],
+      call: ->(a) { P.set_wimpy(a["hp"]) } },
+    { name: "toggle_pref", description: "Toggle a preference flag (autoexit, brief, compact, noauction, nogossip, nograts, norepeat, noshout, nosummon, notell, quest).",
+      params: [{ name: "flag", type: "string", required: true, enum: P::PREF_FLAGS, description: "Preference flag" }],
+      call: ->(a) { P.toggle_pref(a["flag"]) } },
+    { name: "stealth", description: "Hide, sneak, or become visible.",
+      params: [{ name: "mode", type: "string", required: true, enum: P::STEALTH_MODES, description: "Stealth mode" }],
+      call: ->(a) { P.stealth(a["mode"]) } },
+    { name: "steal", description: "Attempt to steal an object from a victim.",
+      params: [
+        { name: "obj", type: "string", required: true, description: "Object to steal" },
+        { name: "victim", type: "string", required: true, description: "Who to steal from" }
+      ],
+      call: ->(a) { P.steal(a["obj"], a["victim"]) } },
+    { name: "practice", description: "Practice a skill, or list practicable skills with no argument.",
+      params: [{ name: "skill", type: "string", required: false, description: "Skill to practice" }],
+      call: ->(a) { P.practice(a["skill"]) } },
+    { name: "define_alias", description: "Define a command alias.",
+      params: [
+        { name: "name", type: "string", required: true, description: "Alias name" },
+        { name: "replacement", type: "string", required: true, description: "What it expands to" }
+      ],
+      call: ->(a) { P.define_alias(a["name"], a["replacement"]) } },
+    { name: "save_char", description: "Save your character.",
+      params: [], call: ->(_a) { P.save_char } },
+    { name: "quit", description: "Quit the game.",
+      params: [], call: ->(_a) { P.quit } },
+
+    # ---------- Magic ----------
+    { name: "cast", description: "Cast a spell, optionally at a target.",
+      params: [
+        { name: "spell", type: "string", required: true, description: "Spell name" },
+        { name: "target", type: "string", required: false, description: "Target" }
+      ],
+      call: ->(a) { P.cast(a["spell"], target: a["target"]) } },
+    { name: "use_magic_item", description: "Use, quaff, or recite a magic item.",
+      params: [
+        { name: "mode", type: "string", required: true, enum: P::SPELL_ITEM, description: "How to use the item" },
+        { name: "item", type: "string", required: true, description: "Item" },
+        { name: "target_args", type: "string", required: false, description: "Extra target arguments" }
+      ],
+      call: ->(a) { P.use_magic_item(a["mode"], a["item"], target_args: a["target_args"]) } },
+
+    # ---------- Group ----------
+    { name: "group_manage", description: "Group or ungroup with a target.",
+      params: [
+        { name: "op", type: "string", required: true, enum: P::GROUP_OPS, description: "Group operation" },
+        { name: "target", type: "string", required: false, description: "Target" }
+      ],
+      call: ->(a) { P.group_manage(a["op"], target: a["target"]) } },
+    { name: "report_hp", description: "Report your HP/mana/move to your group.",
+      params: [], call: ->(_a) { P.report_hp } },
+
+    # ---------- Room-procedural ----------
+    { name: "shop", description: "Buy, sell, list, value, or offer at a shop.",
+      params: [
+        { name: "op", type: "string", required: true, enum: P::SHOP_OPS, description: "Shop operation" },
+        { name: "args", type: "string", required: false, description: "Extra arguments (e.g. item name)" }
+      ],
+      call: ->(a) { P.shop(a["op"], args: a["args"]) } },
+    { name: "bank", description: "Check balance, deposit, or withdraw at a bank.",
+      params: [
+        { name: "op", type: "string", required: true, enum: P::BANK_OPS, description: "Bank operation" },
+        { name: "amount", type: "integer", required: false, description: "Amount" }
+      ],
+      call: ->(a) { P.bank(a["op"], amount: a["amount"]) } },
+    { name: "mail", description: "Send, receive, or check mail.",
+      params: [
+        { name: "op", type: "string", required: true, enum: P::MAIL_OPS, description: "Mail operation" },
+        { name: "recipient", type: "string", required: false, description: "Recipient" }
+      ],
+      call: ->(a) { P.mail(a["op"], recipient: a["recipient"]) } },
+    { name: "rent", description: "Rent a room to save your character and items.",
+      params: [], call: ->(_a) { P.rent } },
+    { name: "house_admin", description: "Administer a house, optionally naming a player to grant/revoke access.",
+      params: [{ name: "player", type: "string", required: false, description: "Player name" }],
+      call: ->(a) { P.house_admin(a["player"]) } }
+  ].freeze
+
+  TOOLS_BY_NAME = TOOLS.each_with_object({}) { |t, h| h[t[:name]] = t }.freeze
+
+  # ---- MUD session (lazy) --------------------------------------------------
+
+  def self.session
+    @session ||= begin
+      s = MudManager::Session.new(
+        host: ENV["MUD_HOST"] || MudManager::Session::DEFAULT_HOST,
+        port: Integer(ENV["MUD_PORT"] || MudManager::Session::DEFAULT_PORT)
+      )
+      s.open
+      s.login(ENV.fetch("MUD_NAME"), ENV.fetch("MUD_PASSWORD"))
+      s
+    end
+  end
+
+  # ---- MCP protocol ---------------------------------------------------------
+
+  def self.input_schema(params)
+    props = params.each_with_object({}) do |p, out|
+      schema = { "type" => p[:type] }
+      schema["enum"] = p[:enum] if p[:enum]
+      schema["description"] = p[:description] if p[:description]
+      out[p[:name]] = schema
+    end
+    required = params.select { |p| p[:required] }.map { |p| p[:name] }
+    { "type" => "object", "properties" => props, "required" => required }
+  end
+
+  def self.tool_list_payload
+    TOOLS.map do |t|
+      { "name" => t[:name], "description" => t[:description], "inputSchema" => input_schema(t[:params]) }
+    end
+  end
+
+  def self.coerce_args(tool, raw_args)
+    raw_args = raw_args || {}
+    out = {}
+    tool[:params].each do |p|
+      value = raw_args.key?(p[:name]) ? raw_args[p[:name]] : nil
+      value = nil if value.is_a?(String) && value.strip.empty? && !p[:required]
+      if value.nil? && p.key?(:default)
+        value = p[:default]
+      end
+      value = Integer(value) if p[:type] == "integer" && !value.nil?
+      out[p[:name]] = value unless value.nil?
+    end
+    out
+  end
+
+  def self.call_tool(name, raw_args)
+    tool = TOOLS_BY_NAME[name]
+    return { is_error: true, text: "unknown_tool: no tool named #{name.inspect}" } unless tool
+
+    args = coerce_args(tool, raw_args)
+    command = tool[:call].call(args)
+    session.send_command(command)
+    text = session.read_until_prompt
+    { is_error: false, text: text }
+  rescue ArgumentError => e
+    { is_error: true, text: "argument_error: #{e.message}" }
+  rescue MudManager::Session::Error => e
+    { is_error: true, text: "session_error: #{e.class}: #{e.message}" }
+  end
+
+  def self.handle(msg)
+    method = msg["method"]
+    id = msg["id"]
+
+    case method
+    when "initialize"
+      respond(id, "result" => {
+        "protocolVersion" => msg.dig("params", "protocolVersion") || "2025-06-18",
+        "capabilities" => { "tools" => {} },
+        "serverInfo" => { "name" => SERVER_NAME, "version" => SERVER_VERSION }
+      })
+    when "notifications/initialized"
+      # no response expected for a notification
+    when "tools/list"
+      respond(id, "result" => { "tools" => tool_list_payload })
+    when "tools/call"
+      name = msg.dig("params", "name")
+      arguments = msg.dig("params", "arguments") || {}
+      result = call_tool(name, arguments)
+      respond(id, "result" => {
+        "content" => [{ "type" => "text", "text" => result[:text] }],
+        "isError" => result[:is_error]
+      })
+    else
+      respond(id, "error" => { "code" => -32601, "message" => "Method not found: #{method}" }) if id
+    end
+  end
+
+  def self.respond(id, payload)
+    return if id.nil?
+
+    $stdout.puts(JSON.generate({ "jsonrpc" => "2.0", "id" => id }.merge(payload)))
+    $stdout.flush
+  end
+
+  def self.run
+    $stdin.each_line do |line|
+      line = line.strip
+      next if line.empty?
+
+      begin
+        msg = JSON.parse(line)
+      rescue JSON::ParserError
+        next
+      end
+      handle(msg)
+    end
+  end
+end
+
+MudManagerMcp.run if $PROGRAM_NAME == __FILE__

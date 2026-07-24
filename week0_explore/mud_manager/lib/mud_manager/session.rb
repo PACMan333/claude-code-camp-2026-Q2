@@ -180,12 +180,22 @@ module MudManager
 
       output = self.read_until(/Welcome|Reconnecting|Wrong password/i)
       if output =~ /Reconnecting/i
-        # already in-world, skip menu
+        # already in-world — the reconnect banner/room can still arrive in
+        # more than one burst, so settle fully before handing control back.
+        drain_settled
       elsif output =~ /Welcome/i
         # fresh login, handle menu
         self.send_command(:return) # enter for main menu
         self.send_command(1)       # enter the game
-        self.read_until_quiet
+        # CircleMUD sends the entering-game banner and the starting room's
+        # description as separate bursts. A single read_until_quiet often
+        # returns after the first burst, leaving the rest — including the
+        # room name — to arrive a moment later and sit unread in @buffer.
+        # Left there, it satisfies the *next* command's read_until_prompt
+        # immediately (that leftover text already ends in "> "), so the
+        # first real command after login comes back truncated/empty. Drain
+        # in a loop until a pass turns up nothing new.
+        drain_settled
       elsif output =~ /Wrong password/i
         raise LoginError, "wrong password"
       end
@@ -194,6 +204,22 @@ module MudManager
     # ----- internals -----
 
     private
+
+    # Keep draining with short, bounded passes until one comes back empty —
+    # i.e. the connection has genuinely gone quiet, not just quiet for one
+    # window. Returns everything collected across all passes (this is what
+    # `login` returns to the caller as the "welcome"/entering-game text).
+    # Bounded to a handful of short passes so a MUD that never goes fully
+    # quiet can't hang login indefinitely.
+    def drain_settled(max_passes: 4, quiet_seconds: 0.5, pass_timeout: 1.5)
+      collected = String.new.force_encoding(Encoding::UTF_8)
+      max_passes.times do
+        chunk = read_until_quiet(quiet_seconds, timeout: pass_timeout)
+        break if chunk.empty?
+        collected << chunk
+      end
+      collected
+    end
 
     def start_reader
       @reader = Thread.new do

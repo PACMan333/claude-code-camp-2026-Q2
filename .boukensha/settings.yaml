@@ -9,3 +9,13 @@ mud:
   port: 4000
   username: dummy
   password: helloworld
+mcp_servers:
+  mud:
+    command: ruby
+    args:    [/home/p_coz/Claude/claude-code-camp-2026-Q2/week0_explore/mud_manager/bin/mud-manager, --mcp]
+    prefix:  tbamud
+    env:
+      MUD_HOST:     localhost
+      MUD_PORT:     "4000"
+      MUD_NAME:     dummy
+      MUD_PASSWORD: helloworld
