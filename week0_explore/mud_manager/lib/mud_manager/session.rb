@@ -178,10 +178,14 @@ module MudManager
       # Enter Password
       self.send_command(password)
 
-      output = self.read_until(/Welcome|Reconnecting|Wrong password/i)
-      if output =~ /Reconnecting/i
-        # already in-world — the reconnect banner/room can still arrive in
-        # more than one burst, so settle fully before handing control back.
+      output = self.read_until(/Welcome|Reconnecting|already in use|Wrong password/i)
+      if output =~ /Reconnecting|already in use/i
+        # already in-world — either a clean reconnect, or CircleMUD auto-
+        # kicking a stale duplicate connection ("You take over your own
+        # body, already in use!") and dropping us straight into the game
+        # with no menu. Either way the reconnect banner/room can still
+        # arrive in more than one burst, so settle fully before handing
+        # control back.
         drain_settled
       elsif output =~ /Welcome/i
         # fresh login, handle menu

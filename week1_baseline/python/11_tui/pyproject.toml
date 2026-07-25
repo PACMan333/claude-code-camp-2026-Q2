@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "boukensha"
+version = "0.0.0"
+description = "Boukensha agent — Step 11: A TUI"
+requires-python = ">=3.9"
+# MCP servers bring their own dependencies; boukensha itself needs only
+# `textual`, for the TUI.
+dependencies = ["textual"]
+
+[project.scripts]
+boukensha = "boukensha_loader:main"
+
+[tool.setuptools]
+py-modules = ["boukensha_loader"]
+
+[tool.setuptools.packages.find]
+include = ["boukensha*"]
