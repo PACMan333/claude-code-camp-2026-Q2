@@ -1,0 +1,152 @@
+extensions:
+  file_storage:
+    directory: /var/lib/otelcol/file_storage
+    timeout: 1s
+
+receivers:
+  filelog:
+    include:
+      - /var/log/boukensha/sessions/*.jsonl
+    start_at: beginning
+    storage: file_storage
+    operators:
+      - type: json_parser
+        parse_from: body
+        parse_to: body
+      - type: time_parser
+        parse_from: body.at
+        layout_type: gotime
+        layout: "2006-01-02T15:04:05Z07:00"
+      - type: move
+        from: body.session_id
+        to: resource["session_id"]
+      - type: move
+        from: body.phase
+        to: attributes.phase
+      # Derive severity: a failed tool_result or a hit budget limit is WARN,
+      # everything else is INFO. Boukensha itself has no severity concept
+      # (it's a flat phase-per-line event log), so this is inferred here
+      # rather than carried from the source.
+      - type: add
+        if: 'attributes.phase == "tool_result" && body.ok == false'
+        field: attributes.severity_hint
+        value: WARN
+      - type: add
+        if: 'attributes.phase == "limit_reached"'
+        field: attributes.severity_hint
+        value: WARN
+      - type: add
+        if: 'attributes.severity_hint == nil'
+        field: attributes.severity_hint
+        value: INFO
+      - type: severity_parser
+        parse_from: attributes.severity_hint
+        mapping:
+          warn: WARN
+          info: INFO
+      - type: remove
+        field: attributes.severity_hint
+
+  # Receives spans from scripts/session_to_traces.py (Phase 4) — not fed by
+  # the filelog receiver, logs and traces are two independent pipelines here.
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  resource:
+    attributes:
+      - key: service.name
+        value: boukensha
+        action: upsert
+  deltatocumulative: {}
+  batch:
+    # Kept deliberately small (default send_batch_size is 8192 items with
+    # no byte cap) — a first-run backfill of a whole `.boukensha/sessions/`
+    # history is ~1600+ records, some carrying multi-KB MUD room-description
+    # text bodies, and one giant batch blew past Loki's 4MB gRPC message
+    # limit (HTTP 503 ResourceExhausted) on the very first export attempt.
+    send_batch_size: 100
+    send_batch_max_size: 200
+    timeout: 1s
+
+# Logs-to-metrics bridge (Phase 4): counts log records per phase without
+# needing a second collection mechanism. This gives event-volume metrics
+# for free; it does NOT give token/cost gauges — those live in the
+# `response` log line's body, and turning a log-attribute *value* into a
+# metric *value* needs more than a connector (see README's Phase 4 notes).
+#
+# Deliberately NOT grouped by session_id: each session_id+phase combo
+# only ever increments once per session, which (a) hit the prometheus
+# exporter's 5-minute metric_expiration (every series vanished minutes
+# after being created) and (b) each session_id is a distinct OTel
+# resource, and the prometheus exporter can't sum counters that arrive
+# under different resources but collapse onto the same flat Prometheus
+# label set — it keeps whichever one it saw last. Grouping by phase only
+# fixes (a) (a "response" series is touched continuously by every
+# session), but NOT (b) — see README's Prometheus tuning notes for why
+# this metric is treated as an approximate "is there recent activity"
+# signal, not an accurate historical total (Loki is the accurate source
+# for that; the Prometheus dashboard panel says so explicitly).
+connectors:
+  count:
+    logs:
+      boukensha.log.count:
+        description: Count of Boukensha log events, by phase
+        attributes:
+          - key: phase
+
+exporters:
+  debug:
+    # "basic" (not "detailed") — detailed dumps every record's full body,
+    # including multi-KB MUD room-description text, which is loud enough
+    # that `docker compose logs` becomes an unreliable way to gauge
+    # pipeline progress (its own volume can outpace what the log driver
+    # keeps/returns). Use Loki/Prometheus queries to check real state,
+    # not this exporter's console output.
+    verbosity: basic
+  otlphttp/loki:
+    logs_endpoint: http://loki:3100/otlp/v1/logs
+    tls:
+      insecure: true
+  otlp/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    # Default 5m: a series not updated within this window stops being
+    # served at the next scrape. Widened as a safety net for genuinely
+    # idle stretches (e.g. overnight, no Boukensha activity) on top of
+    # the phase-only grouping above.
+    metric_expiration: 24h
+
+service:
+  extensions: [file_storage]
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: [resource, batch]
+      exporters: [debug, otlphttp/loki, count]
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlp/tempo]
+    metrics:
+      receivers: [count]
+      # `count` emits a fresh delta (just-this-batch) count on every
+      # single batch it processes, not a running total — it creates a
+      # new internal counter per Consume call and discards it afterwards
+      # (confirmed against the connector's own source). The prometheus
+      # exporter doesn't accumulate deltas itself, so without this
+      # processor every new batch's count was silently *replacing* the
+      # previous exposed value instead of adding to it — confirmed by a
+      # controlled test (a fresh 5-event burst made the exposed total
+      # drop from the real backfill's count down to 5). deltatocumulative
+      # is the standard processor for exactly this: it holds the running
+      # sum itself and emits a true monotonic cumulative counter.
+      processors: [deltatocumulative, batch]
+      exporters: [prometheus]

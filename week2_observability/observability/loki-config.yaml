@@ -1,0 +1,88 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  # Default 4MB gRPC message cap gets hit by a first-run backfill of a
+  # whole `.boukensha/sessions/` history even with the collector's batch
+  # size trimmed down (some MUD room-description bodies are several KB
+  # each). Doubled with headroom rather than shrinking batches further.
+  grpc_server_max_recv_msg_size: 16777216
+
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+ingester:
+  # Small/idle streams (most Boukensha sessions are 10-30 lines) sit
+  # unflushed in the ingester's head block until idle for this long.
+  # Loki's query planner only checks the ingester for *recent* time
+  # ranges (see querier.query_ingesters_within below) — but a filelog
+  # backfill writes old, historical timestamps, so an unflushed stream's
+  # data is invisible to a query for its own (old) time range until it
+  # flushes. Flushing fast avoids a long blind spot after every restart.
+  chunk_idle_period: 30s
+  max_chunk_age: 1h
+  flush_check_period: 30s
+
+querier:
+  # Default (3h) only checks the ingester for queries about the last
+  # few hours. Widened so a query over a Boukensha backfill's full
+  # (older) time range still checks the ingester, not just flushed
+  # store chunks — belt-and-suspenders with the fast flush above.
+  query_ingesters_within: 168h
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  alertmanager_url: http://localhost:9093
+
+limits_config:
+  # Defaults (7d max age, ~4MB/s ingest) are sized for a steady-state
+  # production tenant. Boukensha's filelog receiver backfills a whole
+  # `.boukensha/sessions/` history in one burst on first start, which is
+  # older and burstier than that — widen both so a bootcamp's worth of
+  # session history doesn't get silently dropped
+  # (loki_discarded_samples_total{reason="greater_than_max_sample_age"|"rate_limited"}).
+  reject_old_samples: true
+  reject_old_samples_max_age: 8760h # 1 year
+  ingestion_rate_mb: 64
+  ingestion_burst_size_mb: 128
+
+  # session_id (an OTel resource attribute, set by the collector's filelog
+  # pipeline) is promoted to an actual Loki index label, not left as
+  # structured metadata, so each Boukensha session gets its own stream.
+  # Cardinality is bounded (one label value per session — tens to low
+  # hundreds over a bootcamp's lifetime, not per-request), and it matters
+  # for correctness, not just query convenience: Loki enforces
+  # (mostly-)monotonic timestamps *within* a stream, and the filelog
+  # receiver reads multiple session files concurrently, so without a
+  # per-session label every session's events interleave into one giant
+  # stream and violate that ordering — a historical backfill across many
+  # old session files got mostly rejected as "entry too far behind" until
+  # this was added.
+  otlp_config:
+    resource_attributes:
+      attributes_config:
+        - action: index_label
+          attributes:
+            - session_id
+
+# Anonymous usage stats disabled for this local learning stack.
+analytics:
+  reporting_enabled: false

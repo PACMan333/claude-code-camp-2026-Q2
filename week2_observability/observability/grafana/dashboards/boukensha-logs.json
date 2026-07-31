@@ -1,0 +1,118 @@
+{
+  "title": "Boukensha Logs",
+  "uid": "boukensha-logs",
+  "editable": true,
+  "timezone": "browser",
+  "time": { "from": "now-7d", "to": "now" },
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Log volume by phase",
+      "type": "timeseries",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "loki", "uid": "Loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "loki", "uid": "Loki" },
+          "expr": "sum by (phase) (count_over_time({service_name=\"boukensha\"}[$__interval]))",
+          "legendFormat": "{{phase}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "custom": { "fillOpacity": 20, "stacking": { "mode": "normal" } } },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "title": "Response events (task / provider / model / cost / tokens)",
+      "type": "table",
+      "gridPos": { "h": 14, "w": 24, "x": 0, "y": 10 },
+      "datasource": { "type": "loki", "uid": "Loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "loki", "uid": "Loki" },
+          "expr": "{service_name=\"boukensha\"} | phase=\"response\" | json",
+          "queryType": "range"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": { "mode": "columns" }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "tsNs": true,
+              "id": true,
+              "labelTypes": true,
+              "text": true,
+              "phase": true,
+              "service_name": true,
+              "detected_level": true,
+              "log_file_name": true,
+              "observed_timestamp": true,
+              "severity_number": true,
+              "severity_text": true,
+              "__stream_shard__": true,
+              "usage_unit": true,
+              "usage_service_tier": true,
+              "usage_inference_geo": true,
+              "usage_input_tokens": true,
+              "usage_output_tokens": true,
+              "usage_cache_read_input_tokens": true,
+              "usage_cache_creation_input_tokens": true,
+              "usage_cache_creation_ephemeral_1h_input_tokens": true,
+              "usage_cache_creation_ephemeral_5m_input_tokens": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "session_id": 1,
+              "task": 2,
+              "provider": 3,
+              "model": 4,
+              "cost_usd": 5,
+              "input_tokens": 6,
+              "output_tokens": 7,
+              "stop_reason": 8
+            },
+            "renameByName": {
+              "session_id": "session"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [{ "field": "Time", "desc": true }]
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Event rate by phase (Prometheus, from count connector)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" },
+          "expr": "sum by (phase) (rate(boukensha_log_count_total[$__rate_interval]))",
+          "legendFormat": "{{phase}}"
+        }
+      ],
+      "description": "Live rate only — this counter resets on every otel-collector restart, so it reflects log volume since the collector last started, not full history (see the Loki panel above for that)."
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}

@@ -1,0 +1,63 @@
+server:
+  http_listen_port: 3200
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+ingester:
+  # Trace-shipper runs are one-off, small (a handful of spans), and
+  # `/api/search` only searches flushed blocks — not the still-active
+  # ingester block. With the 5m default, a trace sent via
+  # scripts/session_to_traces.py is retrievable immediately by exact ID
+  # but invisible to Explore's trace search for up to 5 minutes.
+  # Shortened so a shipped trace shows up in search quickly.
+  max_block_duration: 30s
+
+compactor:
+  compaction:
+    block_retention: 24h
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/tempo/traces
+    wal:
+      path: /var/tempo/wal
+    # Default 5m poll means a block the ingester just flushed (see
+    # max_block_duration above) still won't show up in /api/search for up
+    # to 5 more minutes — the querier only discovers new blocks on this
+    # poll cycle, independent of how fast they were written.
+    blocklist_poll: 10s
+
+# Enables Grafana's built-in trace-search overview (rate/error-rate/
+# duration) and ad-hoc TraceQL metrics (`| rate()`, `| quantile_over_time()`,
+# etc. in Explore). Without this, Tempo has no metrics-generator running
+# at all and those queries 500 with "error finding generators ... empty
+# ring" the moment Grafana tries to render them. local-blocks only (not
+# service-graphs/span-metrics) — it answers ad-hoc TraceQL metrics queries
+# from Tempo's own recent in-memory blocks, no remote_write/Prometheus
+# wiring needed.
+metrics_generator:
+  ring:
+    kvstore:
+      store: inmemory
+  storage:
+    path: /var/tempo/generator/wal
+  traces_storage:
+    path: /var/tempo/generator/traces
+  processor:
+    local_blocks:
+      filter_server_spans: false
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: [local-blocks]
+      ingestion_time_range_slack: 8760h
