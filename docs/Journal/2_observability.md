@@ -19,7 +19,7 @@ You don't use the Search tab to find it, use direct Trace ID lookup instead:
 3. Change the query type to TraceID (not "Search")
 4. Paste: ec972c06019443233715a09d154997ed
 5. Run query
-
+ 
 Here is a screen shot of what the trace looks like:
 
 ![Grafana-Tempo trace data](image-3.png)

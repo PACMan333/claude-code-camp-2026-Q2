@@ -19,3 +19,77 @@ mcp_servers:
       MUD_PORT:     "4000"
       MUD_NAME:     dummy
       MUD_PASSWORD: helloworld
+    tools:
+      # Perception
+      look:            off
+      # Movement & posture
+      move:            on
+      enter:           off
+      leave:           off
+      set_position:    off
+      follow:          off
+      flee:            off
+      track:           off
+      # Combat
+      attack:          off
+      skill_strike:    off
+      order:           off
+      insult:          off
+      # Communication
+      say_local:       off
+      say_targeted:    off
+      say_channel:     off
+      say_group:       off
+      say_quest:       off
+      report_player:   off
+      write_note:      off
+      # Inventory & objects
+      get:             off
+      drop:            off
+      put:             off
+      give:            off
+      equip:           off
+      consume:         off
+      transfer_liquid: off
+      split_gold:      off
+      # Doors
+      door:            off
+      # Perception & info
+      examine:         on
+      info_self:                  # exposed to the agent as tbamud__check,
+        "on": true                # not tbamud__info_self -- same tool,
+        as: check                 # same kind: enum (score/inventory/
+                                   # equipment/gold/exits/time/weather/
+                                   # levels/wimpy/toggle/where), renamed
+                                   # only at the boukensha registration
+                                   # layer. The server is still called with
+                                   # "name": "info_self" on the wire.
+      info_world:      off
+      consider:        off
+      diagnose:        off
+      list_commands:   off
+      # Character / preferences / lifecycle
+      social:          off
+      set_title:       off
+      set_display:     off
+      set_color:       off
+      set_wimpy:       off
+      toggle_pref:     off
+      stealth:         off
+      steal:           off
+      practice:        off
+      define_alias:    off
+      save_char:       off
+      quit:            off
+      # Magic
+      cast:            off
+      use_magic_item:  off
+      # Group
+      group_manage:    off
+      report_hp:       off
+      # Room-procedural
+      shop:            off
+      bank:            off
+      mail:            off
+      rent:            off
+      house_admin:     off

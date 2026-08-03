@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
+
+# Find boukensha_loader locally when run without a real `pip install`
+# (e.g. `./bin/boukensha` straight out of this step's checkout), mirroring
+# every other step's examples/*.py bootstrapping its own local package.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+import boukensha_loader  # noqa: E402
+
+boukensha_loader.main()
