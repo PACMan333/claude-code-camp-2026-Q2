@@ -1,0 +1,256 @@
+#!/usr/bin/env python3
+"""
+Reset the player character to a known starting room using an immortal
+`teleport` command.
+
+The player must be online for `teleport` to affect them, so this script
+logs in two separate telnet sessions — the player account (to guarantee
+they're in-world) and an admin/immortal account (to issue the god command)
+— then disconnects both.
+
+Usage:
+    week3_capable/bin/reset
+
+Env vars (all optional, defaults shown):
+    MUD_HOST=localhost  MUD_PORT=4000
+    PLAYER_USERNAME=dummy  PLAYER_PASSWORD=helloworld
+    ADMIN_USERNAME=admin   ADMIN_PASSWORD=password
+    START_ROOM=3001
+"""
+import os
+import re
+import socket
+import sys
+import threading
+import time
+
+DEFAULT_HOST = "localhost"
+DEFAULT_PORT = 4000
+DEFAULT_PLAYER_USERNAME = "dummy"
+DEFAULT_PLAYER_PASSWORD = "helloworld"
+DEFAULT_ADMIN_USERNAME = "admin"
+DEFAULT_ADMIN_PASSWORD = "password"
+DEFAULT_START_ROOM = "3001"
+
+# Same sentinel mud_manager/session.rb's PROMPT_SENTINEL uses against the
+# real tbaMUD: every command response ends in "> ". (mud.py's play-mud
+# skill uses a more specific "V (" vitals-bar marker instead, tuned for its
+# own long-running daemon -- that marker never appears in the fake MUD's
+# plain "> " prompt, so this script uses the simpler, already-proven-safe
+# sentinel instead, keeping it exercisable against both real and fake.)
+GAME_PROMPT_MARKER = "> "
+
+# --- Telnet protocol constants ---
+IAC, DONT, DO, WONT, WILL, SB, SE = 255, 254, 253, 252, 251, 250, 240
+
+ANSI_RE = re.compile(rb"\x1b\[[0-9;]*[a-zA-Z]")
+
+
+class LoginError(Exception):
+    pass
+
+
+class TelnetParser:
+    """Incrementally strips telnet IAC negotiation and ANSI color codes out
+    of a raw byte stream, replying to option negotiation by refusing
+    everything (IAC WONT/DONT) so the server settles into plain text mode."""
+
+    def __init__(self):
+        self._buf = b""
+
+    def feed(self, data: bytes):
+        self._buf += data
+        buf = self._buf
+        n = len(buf)
+        text = bytearray()
+        replies = bytearray()
+        i = 0
+        while i < n:
+            b = buf[i]
+            if b == IAC:
+                if i + 1 >= n:
+                    break  # wait for more bytes
+                cmd = buf[i + 1]
+                if cmd == IAC:
+                    text.append(IAC)
+                    i += 2
+                    continue
+                if cmd in (WILL, WONT, DO, DONT):
+                    if i + 2 >= n:
+                        break
+                    opt = buf[i + 2]
+                    if cmd == WILL:
+                        replies += bytes([IAC, DONT, opt])
+                    elif cmd == DO:
+                        replies += bytes([IAC, WONT, opt])
+                    i += 3
+                    continue
+                if cmd == SB:
+                    se_idx = buf.find(bytes([IAC, SE]), i)
+                    if se_idx == -1:
+                        break  # wait for the rest of the subnegotiation
+                    i = se_idx + 2
+                    continue
+                # GA, NOP, and other bare 2-byte commands: consume, ignore
+                i += 2
+                continue
+            text.append(b)
+            i += 1
+        self._buf = buf[i:]
+        clean = ANSI_RE.sub(b"", bytes(text))
+        return clean.decode("latin-1", errors="replace"), bytes(replies)
+
+
+class Connection:
+    """A single telnet connection to the MUD. Runs a background reader
+    thread into a buffered string; the caller sends lines and waits for
+    expected text to show up."""
+
+    def __init__(self, host, port):
+        self.sock = socket.create_connection((host, port), timeout=10)
+        self.sock.settimeout(0.5)
+        self.parser = TelnetParser()
+        self.buffer = ""
+        self.lock = threading.Lock()
+        self.alive = True
+        self._thread = threading.Thread(target=self._reader, daemon=True)
+        self._thread.start()
+
+    def _reader(self):
+        while self.alive:
+            try:
+                chunk = self.sock.recv(4096)
+            except socket.timeout:
+                continue
+            except OSError:
+                break
+            if not chunk:
+                self.alive = False
+                break
+            text, replies = self.parser.feed(chunk)
+            if replies:
+                try:
+                    self.sock.sendall(replies)
+                except OSError:
+                    pass
+            if text:
+                with self.lock:
+                    self.buffer += text
+
+    def send_line(self, line):
+        self.sock.sendall(line.encode("latin-1", errors="replace") + b"\r\n")
+
+    def take_new(self):
+        with self.lock:
+            out, self.buffer = self.buffer, ""
+        return out
+
+    def wait_for(self, needles, timeout=10):
+        """Block until one of `needles` has appeared in freshly-received
+        text, or timeout. Returns (and consumes) everything seen so far."""
+        start = time.time()
+        seen = ""
+        while time.time() - start < timeout and self.alive:
+            seen += self.take_new()
+            if any(needle in seen for needle in needles):
+                return seen
+            time.sleep(0.1)
+        return seen
+
+    def close(self):
+        self.alive = False
+        try:
+            self.sock.close()
+        except OSError:
+            pass
+
+
+def login(conn, username, password):
+    """Walk the CircleMUD login dance (mirrors mud_manager/session.rb's
+    #login, the field-proven implementation this same repo already uses
+    against the real tbaMUD). Returns True if this login took over an
+    already-connected session for the same name (a running boukensha play
+    session, another telnet client, etc.) rather than starting fresh."""
+    conn.wait_for(["By what name"])
+    conn.send_line(username)
+    conn.wait_for(["Password:"])
+    conn.send_line(password)
+    chunk = conn.wait_for(
+        ["Welcome", "Reconnecting", "already in use", "Wrong password"],
+        timeout=8,
+    )
+    if "Wrong password" in chunk:
+        raise LoginError("{}: wrong password".format(username))
+    if "Reconnecting" in chunk or "already in use" in chunk:
+        return True  # already in-world, dropped straight into the game
+    conn.send_line("")   # press return past the banner, at the main menu
+    conn.send_line("1")  # enter the game
+    conn.wait_for([GAME_PROMPT_MARKER], timeout=8)
+    return False
+
+
+def read_config_from_env():
+    return {
+        "host": os.environ.get("MUD_HOST", DEFAULT_HOST),
+        "port": int(os.environ.get("MUD_PORT", DEFAULT_PORT)),
+        "player_username": os.environ.get("PLAYER_USERNAME", DEFAULT_PLAYER_USERNAME),
+        "player_password": os.environ.get("PLAYER_PASSWORD", DEFAULT_PLAYER_PASSWORD),
+        "admin_username": os.environ.get("ADMIN_USERNAME", DEFAULT_ADMIN_USERNAME),
+        "admin_password": os.environ.get("ADMIN_PASSWORD", DEFAULT_ADMIN_PASSWORD),
+        "start_room": os.environ.get("START_ROOM", DEFAULT_START_ROOM),
+    }
+
+
+def main():
+    cfg = read_config_from_env()
+
+    player = Connection(cfg["host"], cfg["port"])
+    print("[reset] connecting as player '{}'...".format(cfg["player_username"]))
+    try:
+        hijacked = login(player, cfg["player_username"], cfg["player_password"])
+    except LoginError as e:
+        print("[reset] ERROR: player login failed: {}".format(e), file=sys.stderr)
+        sys.exit(1)
+    if hijacked:
+        print(
+            "[reset] WARNING: '{}' was already connected elsewhere — that "
+            "session has just been disconnected/taken over.".format(cfg["player_username"]),
+            file=sys.stderr,
+        )
+    print("[reset] player online.")
+
+    admin = Connection(cfg["host"], cfg["port"])
+    print("[reset] connecting as admin '{}'...".format(cfg["admin_username"]))
+    try:
+        login(admin, cfg["admin_username"], cfg["admin_password"])
+    except LoginError as e:
+        print("[reset] ERROR: admin login failed: {}".format(e), file=sys.stderr)
+        sys.exit(1)
+    print("[reset] admin online.")
+
+    cmd = "teleport {} {}".format(cfg["player_username"], cfg["start_room"])
+    print("[reset] admin> {}".format(cmd))
+    admin.send_line(cmd)
+    response = admin.wait_for([GAME_PROMPT_MARKER], timeout=8)
+    print(response)
+
+    player.send_line("look")
+    look = player.wait_for([GAME_PROMPT_MARKER], timeout=8)
+    print(look)
+    if "temple of midgaard" not in look.lower() and cfg["start_room"] == "3001":
+        print(
+            "[reset] WARNING: player's `look` output doesn't mention "
+            "Temple Of Midgaard — check the transcript above.",
+            file=sys.stderr,
+        )
+
+    for conn in (player, admin):
+        conn.send_line("quit")
+        conn.wait_for(["neither"], timeout=5)  # best-effort drain, ignore result
+        conn.close()
+
+    print("[reset] done.")
+
+
+if __name__ == "__main__":
+    main()

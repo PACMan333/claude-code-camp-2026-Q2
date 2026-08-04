@@ -1,0 +1,634 @@
+{
+  "1": {
+    "desc": "You are in the southern end of the temple hall in the Temple of Midgaard.\nThe temple has been constructed from giant marble blocks, eternal in\nappearance, and most of the walls are covered by ancient wall paintings\npicturing Gods, giants and peasants.\nLarge steps lead down through the grand temple gate, descending the huge\nmound upon which the temple is built and ends on the temple square below.\nTo the west, you see the Reading Room.  The donation room is in a small\nalcove to your east.\n[ Exits: n e s w d ]\nAn automatic teller machine has been installed in the wall here.\nA newbie dummy mob is unsure what it is doing.\n23H 100M 83V (news) (motd) >",
+    "exits": {
+      "north": 2
+    },
+    "name": "The Temple Of Midgaard"
+  },
+  "2": {
+    "desc": "You are by the temple altar in the northern end of the Temple of Midgaard.\nA huge altar made from white polished marble dominates this part of the temple.\nTowering behind the altar is a ten foot tall sitting statue of Odin, the King of\nthe Gods. To the north, steps lead out the back of the temple towards the\ncountryside.\n[ Exits: n s ]\n23H 100M 82V (news) (motd) >",
+    "exits": {
+      "north": 3
+    },
+    "name": "By The Temple Altar"
+  },
+  "3": {
+    "desc": "You are on a dirt path leading away from the Temple Altar which is south\nof here.  To the north, the path continues through the lush contryside of\nMidgaard towards the Dragonhelm Mountains far off to the north.\n[ Exits: n s ]\n23H 100M 81V (news) (motd) >",
+    "exits": {
+      "north": 4
+    },
+    "name": "Behind The Temple Altar"
+  },
+  "4": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe path you are on continues north through the field and south back\nto Midgaard.\n[ Exits: n s ]\n23H 100M 80V (news) (motd) >",
+    "exits": {
+      "north": 5
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "5": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 79V (news) (motd) >",
+    "exits": {
+      "north": 6
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "6": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 78V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 7
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "7": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 77V (news) (motd) >",
+    "exits": {
+      "north": 8
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "8": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 76V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 9
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "9": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 75V (news) (motd) >",
+    "exits": {
+      "north": 10
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "10": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 74V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 11
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "11": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 73V (news) (motd) >",
+    "exits": {
+      "north": 12
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "12": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 72V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 13
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "13": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 71V (news) (motd) >",
+    "exits": {
+      "north": 14
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "14": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 70V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 15
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "15": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 69V (news) (motd) >",
+    "exits": {
+      "north": 16
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "16": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 68V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 17
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "17": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 67V (news) (motd) >",
+    "exits": {
+      "north": 18
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "18": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 66V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 19
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "19": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 65V (news) (motd) >",
+    "exits": {
+      "north": 20
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "20": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 64V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 21
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "21": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 63V (news) (motd) >",
+    "exits": {
+      "north": 22
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "22": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 62V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 23
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "23": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 61V (news) (motd) >",
+    "exits": {
+      "north": 24
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "24": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 60V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 25
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "25": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 59V (news) (motd) >",
+    "exits": {
+      "north": 26
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "26": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 58V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 27
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "27": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 57V (news) (motd) >",
+    "exits": {
+      "north": 28
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "28": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 56V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 29
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "29": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 55V (news) (motd) >",
+    "exits": {
+      "north": 30
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "30": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 54V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 31
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "31": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 53V (news) (motd) >",
+    "exits": {
+      "north": 32
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "32": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 52V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 33
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "33": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 51V (news) (motd) >",
+    "exits": {
+      "north": 34
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "34": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 50V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 35
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "35": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 49V (news) (motd) >",
+    "exits": {
+      "north": 36
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "36": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 48V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 37
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "37": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 47V (news) (motd) >",
+    "exits": {
+      "north": 38
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "38": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 46V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 39
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "39": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 45V (news) (motd) >",
+    "exits": {
+      "north": 40
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "40": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 44V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 41
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "41": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 43V (news) (motd) >",
+    "exits": {
+      "north": 42
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "42": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 42V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 43
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "43": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 41V (news) (motd) >",
+    "exits": {
+      "north": 44
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "44": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 40V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 45
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "45": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 39V (news) (motd) >",
+    "exits": {
+      "north": 46
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "46": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 38V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 47
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "47": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 37V (news) (motd) >",
+    "exits": {
+      "north": 48
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "48": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 36V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 49
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "49": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 35V (news) (motd) >",
+    "exits": {
+      "north": 50
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "50": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 34V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 51
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "51": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 33V (news) (motd) >",
+    "exits": {
+      "north": 52
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "52": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 32V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 53
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "53": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 31V (news) (motd) >",
+    "exits": {
+      "north": 54
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "54": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 30V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 55
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "55": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 29V (news) (motd) >",
+    "exits": {
+      "north": 56
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "56": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 28V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 57
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "57": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 27V (news) (motd) >",
+    "exits": {
+      "north": 58
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "58": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 26V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 59
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "59": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 25V (news) (motd) >",
+    "exits": {
+      "north": 60
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "60": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 24V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 61
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "61": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 23V (news) (motd) >",
+    "exits": {
+      "north": 62
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "62": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 22V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 63
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "63": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 21V (news) (motd) >",
+    "exits": {
+      "north": 64
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "64": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 20V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 65
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "65": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 19V (news) (motd) >",
+    "exits": {
+      "north": 66
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "66": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 18V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 67
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "67": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 17V (news) (motd) >",
+    "exits": {
+      "north": 68
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "68": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 16V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 69
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "69": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 15V (news) (motd) >",
+    "exits": {
+      "north": 70
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "70": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 14V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 71
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "71": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 13V (news) (motd) >",
+    "exits": {
+      "north": 72
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "72": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 12V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 73
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "73": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 11V (news) (motd) >",
+    "exits": {
+      "north": 74
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "74": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 10V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 75
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "75": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 9V (news) (motd) >",
+    "exits": {
+      "north": 76
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "76": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 8V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 77
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "77": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 7V (news) (motd) >",
+    "exits": {
+      "north": 78
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "78": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 6V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 79
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "79": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 5V (news) (motd) >",
+    "exits": {
+      "north": 80
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "80": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 4V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 81
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "81": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 3V (news) (motd) >",
+    "exits": {
+      "north": 82
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "82": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 2V (news) (motd) >",
+    "exits": {
+      "north": null,
+      "south": 83
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "83": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThere is a strange structure on the eastern side of the path.  A small\ndirt path splits off of the main path and leads off to the west.\n[ Exits: n e s w ]\n23H 100M 1V (news) (motd) >",
+    "exits": {
+      "north": 84
+    },
+    "name": "The Great Field Of Midgaard"
+  },
+  "84": {
+    "desc": "You are walking on a wide dirt path through the lush, green, fresh\nMidgaard countryside.  You can see to the horizon to the north, east,\nand west; the busy city of Midgaard lies to the south.  All around you\nis healthy green grass and an occasional large oak tree.  The sun feels\nwonderful on your face and a pleasant wind blows through your hair.  Birds\nchirp quietly to themselves and you can smell the faint scent of flowers\nand freshly cut grass.  You feel like you could lie down in the grass and\nstay here forever, surrounded by powerful beauty in all directions.\nThe way north appears to be blocked by a large plot device and you cannot\nsee any way around it.\n[ Exits: s ]\n23H 100M 0V (news) (motd) >",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": null,
+      "south": null,
+      "up": null,
+      "west": null
+    },
+    "name": "The Great Field Of Midgaard"
+  }
+}

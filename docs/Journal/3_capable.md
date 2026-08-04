@@ -2,22 +2,18 @@
 
 
 ## Technical Goal
-What is the technical goal you plan to achieve in this week of the bootcamp.
-
-| Note that Andrew will write his intended goal but you may choose to devaiate as you might have different technical outcomes that you want to achieve.
+The technical goal in this week of the bootcamp is to get the Agent to be able to find the bakery in the least amouint of moves.
 
 ## Technical Uncertainty
-What are you uncertain about in terms of technical achievemenet which could result in technical failure or technical deadend?
+Can we get less token use from the MUD Agent to Claude?  Can we find the Bakery in less steps?
 
 ## Technical Hypotheses 
-Please make an educated guess on what you think the technical outcome will be.
+I think with settting up a smaller payload in the API calls to claude by limiting the command payload will use less tokens, creating a BFS linked db of all the rooms that the MUD Agent can find will help make it easier for the Agent to find locations in the MUD and save in token use.
 
 ## Technical Observerations
-While implementing your technical experiements what key observsations can you share which would be useful for someone to know trying to replicate your experience.
+Updated the settings.yaml file to include all the tools that I want Claude to use with a yes/no keyword, this now just sends 3 commands, not all 55, in eaxh API call packet now.  This will use less API tokens on each API call now.  You can see this change by the MUD(#) that lits tot tools loaded now:
 
-| If you have a considerable amount of documentation please summarize and link to documentation. This section is the perfect place to show proof of work such as screenshot, code samples, benchmarks.
-
-| Remember that routine work should be ommitted eg. how to install docker, what is an LLM.
+![BK Tools list screen shot](image-8.png)
 
 ## Technical Conclusions
 Reflecting back your education guesses from the technical uncertainty section what was the technical outcomes. Is there any new technical uncertainty that has been put aside for future exploration. Are there any next steps or technical considerations worth noting?
