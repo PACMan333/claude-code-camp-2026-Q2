@@ -19,9 +19,9 @@ Created a reset script so the player can be reset back to the start room, The Te
 
 ![Reset Output screen shot](image-10.png)
 
-Created a mapping tool to manually crawl and map the Northern Midgaard Zone with a BFS search order.  This creates a python dictionary file that can be loaded into memory so it can find things quickly.  While doing the manual mapping the player keep getting exhausted and could not continue seraching, so Claude found the restore command: via an admin session restore fully refills movement points (83/83). This resolved the issue when the player could not continue on mapping rooms.  The look command also had to be turned on in the settings.yaml file for this mapping to work, so there are 4 tools loaded now.  The Agent can now find the Bakery quickly, here is a screem shot of the request:
+Created a mapping tool to manually crawl and map the Northern Midgaard Zone with a BFS search order.  This creates a python dictionary file that can be loaded into memory so it can find things quickly.  While doing the manual mapping the player keep getting exhausted and could not continue seraching, so Claude found the restore command: via an admin session restore fully refills movement points (83/83). This resolved the issue when the player could not continue on mapping rooms.  The look command also had to be turned on in the settings.yaml file for this mapping to work, so there are only 6 tools loaded now.  The Agent can now find the Bakery quickly, here is a screem shot of the request:
 
-![Screen Shot of Bakery](image-9.png)
+![Screen Shot of Bakery Iteration](image-9.png)
 
 ## Technical Conclusions
 Reflecting back your education guesses from the technical uncertainty section what was the technical outcomes. Is there any new technical uncertainty that has been put aside for future exploration. Are there any next steps or technical considerations worth noting?

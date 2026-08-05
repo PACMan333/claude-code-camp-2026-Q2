@@ -71,7 +71,6 @@ import importlib.machinery
 import importlib.util
 import json
 import os
-import re
 import sys
 import time
 from collections import deque
@@ -81,6 +80,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import boukensha  # noqa: E402
 from boukensha.tools import mcp as tools_mcp  # noqa: E402
 from zone_nav.graph import RoomInfo, shortest_paths_from, reconstruct_path  # noqa: E402
+from zone_nav.text import EXITS_LINE_RE, clean_lines, has_exits_line, is_noise_line  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 MUD_MANAGER_ROOT = REPO_ROOT / "week0_explore" / "mud_manager"
@@ -133,85 +133,38 @@ BOUNDARY_EXITS = {
 }
 BOUNDARY_MARKER = "boundary"
 
-ANSI_RE = re.compile(r"\x1b\[[0-9;]*[a-zA-Z]")
-EXITS_LINE_RE = re.compile(r"^\[\s*exits:.*\]$", re.IGNORECASE)
-# The vitals/prompt line tbaMUD ends every response with, e.g.
-# "23H 100M 69V (news) (motd) > ". Confirmed live: this can end up as the
-# *only* content of a read (the real room-description burst hadn't fully
-# arrived yet), landing as the first line and getting misread as a room
-# name -- the sentence-punctuation check below doesn't catch it, since it
-# ends in ">", not "."/"!"/"?".
-PROMPT_LINE_RE = re.compile(r"^\d+H\s+\d+M\s+\d+V\b.*>\s*$")
-# Server text confirmed live to arrive asynchronously relative to whatever
-# command is actually in flight, landing in the middle of an unrelated
-# response and getting misread as room text -- twice now, literally
-# becoming a room's "name": once a login-triggered server-wide
-# announcement ("A booming voice announces, 'Welcome Dummy to the
-# realm!'"), once the immortal teleport's own confirmation to the target
-# player ("Admin has teleported you!", from _teleport_to_anchor's rescue
-# path). Filtered out at the single choke point every response passes
-# through (_clean_lines) rather than chased with more settle delays, since
-# it's not reliably timing-dependent from the parser's perspective --
-# wherever and whenever either lands, neither should ever be treated as
-# room content.
-BROADCAST_RE = re.compile(
-    r"^(A booming voice announces,|Admin has teleported you!).*$", re.IGNORECASE | re.MULTILINE
-)
+# ANSI-stripping, exits-line detection, and stray-broadcast/vitals-line
+# filtering all live in zone_nav/text.py now, shared with zone_nav/tool.py
+# (goto_room) -- confirmed live that goto_room needs the identical
+# protection this crawler already had, and two independently-maintained
+# copies had already drifted out of sync once.
 
 
 class CrawlStuckError(Exception):
     pass
 
 
-def _clean_lines(text):
-    text = BROADCAST_RE.sub("", text)
-    lines = [ANSI_RE.sub("", ln).strip() for ln in text.splitlines()]
-    return [ln for ln in lines if ln]
-
-
-def has_exits_line(text):
-    """True if `text` looks like room text (contains a "[ Exits: ... ]"
-    line) rather than a failed-move message. Confirmed live: a blocked
-    move (e.g. no exit that direction) returns a short message with no
-    room text at all -- "Alas, you cannot go that way...\\r\\n\\r\\n23H
-    100M 2V (news) (motd) > " -- so presence/absence of the exits line is
-    a reliable, content-based way to tell "moved" from "didn't move"
-    without hardcoding that one specific failure string (a blocked door,
-    e.g., likely says something else entirely).
-    """
-    return any(EXITS_LINE_RE.match(ln) for ln in _clean_lines(text))
-
-
 def parse_look(text):
-    """Splits room text into (name, static description). Only the static
-    part -- room name through the "[ Exits: ... ]" line -- is used for
-    room identity. Confirmed live (this repo, this crawl): everything
-    after that line varies call to call even for the *same* physical room
-    -- the trailing vitals/prompt line ("23H 100M 3V (news) (motd) >")
-    changes on every call since movement points fluctuate, which made two
-    visits to the Temple register as two different rooms before this fix.
-    Room contents (mobs/players/items) would have the same problem if
-    included. The exits line is a reliable boundary: everything through it
-    is the room's fixed, hand-authored text; everything after is dynamic
-    state that must not be part of the identity signature.
+    """Splits room text into (name, static description), using
+    zone_nav.text's shared ANSI-stripping/broadcast-filtering/noise-line
+    heuristics (clean_lines, is_noise_line) so this crawler and the live
+    goto_room tool can never drift back out of sync on what counts as
+    "not actually a room name."
 
-    Also skips any leading line that looks like a stray notification or a
-    lone vitals/prompt line rather than a room name -- confirmed live,
-    several *different* kinds of dynamic text can land as the first line
-    of an otherwise-unrelated response (a realm-wide announcement, a
-    teleport confirmation, a mob arrival/departure message, a zone-level
-    warning, or just the trailing prompt with nothing else -- BROADCAST_RE
-    only covers the first two, confirmed exact strings; chasing every
-    possible message text one at a time doesn't scale). The general,
-    well-evidenced signal: every real room name seen in this MUD (dozens,
-    by now) is a short title with no trailing punctuation ("The Temple Of
-    Midgaard", "Main Street"); every corrupted case observed was either a
-    full sentence ending in `.`/`!`/`?` ("The green gelatinous blob has
-    arrived.") or the vitals/prompt line itself ("23H 100M 69V (news)
-    (motd) >"). Neither is ever treated as a candidate room name.
+    Only the static part -- room name through the "[ Exits: ... ]" line --
+    is used for room identity. Confirmed live (this repo, this crawl):
+    everything after that line varies call to call even for the *same*
+    physical room -- the trailing vitals/prompt line ("23H 100M 3V (news)
+    (motd) >") changes on every call since movement points fluctuate,
+    which made two visits to the Temple register as two different rooms
+    before this fix. Room contents (mobs/players/items) would have the
+    same problem if included. The exits line is a reliable boundary:
+    everything through it is the room's fixed, hand-authored text;
+    everything after is dynamic state that must not be part of the
+    identity signature.
     """
-    lines = _clean_lines(text)
-    while lines and (lines[0].endswith((".", "!", "?")) or PROMPT_LINE_RE.match(lines[0])):
+    lines = clean_lines(text)
+    while lines and is_noise_line(lines[0]):
         lines = lines[1:]
     name = lines[0] if lines else ""
     static_lines = []

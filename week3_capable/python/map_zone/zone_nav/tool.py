@@ -7,22 +7,39 @@ domain logic of its own (see `boukensha/__init__.py`); this is app-level
 code that happens to use boukensha, the same relationship `examples/*.py`
 already has.
 """
-import re
+import time
 
 from . import graph as zone_graph
-
-ANSI_RE = re.compile(r"\x1b\[[0-9;]*[a-zA-Z]")
+from . import text as zone_text
 
 
 def _current_room_name(look_text):
-    """tbaMUD sends ANSI color codes around room names (confirmed in this
-    repo's own raw telnet captures); mud_manager/session.rb strips telnet
-    IAC negotiation bytes but never touches ANSI escapes, so they pass
-    straight through `look`'s response. Strip them before matching."""
-    for line in look_text.splitlines():
-        stripped = ANSI_RE.sub("", line).strip()
-        if stripped:
-            return stripped
+    """Delegates to zone_nav.text.first_room_name_line -- the same
+    ANSI-stripping, broadcast-filtering, and noise-line-skipping logic
+    scripts/crawl_zone.py's parsing relies on. Confirmed live this isn't
+    optional here either: a login-triggered realm-wide announcement
+    landing as the first line of `look`'s response once made goto_room
+    fail to recognize the player's own current room."""
+    return zone_text.first_room_name_line(look_text)
+
+
+def _look_current_room_name(dsl, look_tool, retries=3, delay=0.5):
+    """Dispatches `look` and extracts the room name, retrying (with a
+    settle delay) if it comes back empty. Confirmed live: a `look` can
+    occasionally return nothing recognizable as a room name at all --
+    every candidate line filtered out as noise, e.g. an async server
+    message straddling the read with nothing else in the buffer yet --
+    even after zone_nav.text's filtering already rules out the specific
+    known-bad strings. scripts/crawl_zone.py's Crawler.visit_current_room
+    has carried the identical retry for the same reason since the crawl
+    itself hit this; goto_room needs it just as much at runtime.
+    """
+    for attempt in range(retries + 1):
+        name = _current_room_name(dsl.dispatch(look_tool, {}))
+        if name:
+            return name
+        if attempt < retries:
+            time.sleep(delay)
     return None
 
 
@@ -35,8 +52,13 @@ def register(dsl, *, move_tool="tbamud__move", look_tool="tbamud__look", zone_pa
         if not candidates:
             return "error: no room matching '{}' in the mapped zone (Northern Midgaard)".format(room_name)
 
-        current_name = _current_room_name(dsl.dispatch(look_tool, {}))
-        current_matches = [i for i, n in name_by_id.items() if n.lower() == (current_name or "").lower()]
+        current_name = _look_current_room_name(dsl, look_tool)
+        if current_name is None:
+            return (
+                "error: couldn't determine the current room (no readable room text came back "
+                "from `look`, even after retries) -- try again"
+            )
+        current_matches = [i for i, n in name_by_id.items() if n.lower() == current_name.lower()]
         if not current_matches:
             return (
                 "error: current room ('{}') isn't recognized as part of the mapped zone -- "
@@ -65,7 +87,7 @@ def register(dsl, *, move_tool="tbamud__move", look_tool="tbamud__look", zone_pa
         # derailed path (blocked door, wandering mob) without doubling the
         # tool-call cost of every trip. Same warn-don't-silently-claim-success
         # pattern as week3_capable/bin/reset.
-        confirm_name = _current_room_name(dsl.dispatch(look_tool, {}))
+        confirm_name = _look_current_room_name(dsl, look_tool)
         arrived = (confirm_name or "").lower() == name_by_id[target_id].lower()
         status = "arrived at" if arrived else "expected to arrive at (unconfirmed, currently at '{}')".format(confirm_name)
         return "{} {} via {} move(s): {}".format(

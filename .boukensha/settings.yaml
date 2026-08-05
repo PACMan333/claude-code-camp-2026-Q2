@@ -88,7 +88,7 @@ mcp_servers:
       group_manage:    off
       report_hp:       off
       # Room-procedural
-      shop:            off
+      shop:            on
       bank:            off
       mail:            off
       rent:            off

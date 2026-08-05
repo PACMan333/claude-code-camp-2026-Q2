@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from zone_nav import graph as zone_graph  # noqa: E402
-from zone_nav.tool import _current_room_name  # noqa: E402
+from zone_nav.tool import _current_room_name, _look_current_room_name  # noqa: E402
 
 
 class TestFindByName(unittest.TestCase):
@@ -77,6 +77,55 @@ class TestCurrentRoomName(unittest.TestCase):
 
     def test_empty_text_returns_none(self):
         self.assertIsNone(_current_room_name(""))
+
+    def test_login_broadcast_does_not_get_read_as_room_name(self):
+        # Confirmed live in an actual interactive session: this broadcast
+        # landing as the first line of `look`'s response made goto_room
+        # report "current room ('A booming voice announces, ...') isn't
+        # recognized" instead of finding the Temple. zone_nav.tool must
+        # share crawl_zone.py's filtering, not a weaker ANSI-only version.
+        text = (
+            "A booming voice announces, 'Welcome Dummy to the realm!'\r\n\r\n"
+            "\x1b[0;33mThe Temple Of Midgaard\x1b[0m\r\n"
+            "   You are in the southern end of the temple hall.\r\n"
+            "[ Exits: n e s w d ]\r\n\r\n23H 100M 79V (news) (motd) > "
+        )
+        self.assertEqual(_current_room_name(text), "The Temple Of Midgaard")
+
+
+class FakeDsl:
+    """Returns a scripted sequence of `look` responses, one per dispatch
+    call -- for testing _look_current_room_name's retry loop without a
+    real MUD."""
+
+    def __init__(self, responses):
+        self._responses = list(responses)
+
+    def dispatch(self, name, args=None):
+        return self._responses.pop(0)
+
+
+class TestLookCurrentRoomNameRetry(unittest.TestCase):
+    ROOM_TEXT = "The Temple Of Midgaard\r\n   You are here.\r\n[ Exits: n ]\r\n\r\n23H 100M 3V > "
+
+    def test_succeeds_immediately_when_look_is_clean(self):
+        dsl = FakeDsl([self.ROOM_TEXT])
+        name = _look_current_room_name(dsl, "look", retries=2, delay=0)
+        self.assertEqual(name, "The Temple Of Midgaard")
+
+    def test_retries_past_an_empty_read_then_succeeds(self):
+        # Confirmed live in an actual interactive session: `look` came back
+        # with nothing recognizable as a room name at all on the first try
+        # (goto_room reported "current room ('None') isn't recognized"),
+        # even though a normal `look` moments before had worked fine. This
+        # is exactly that shape: one empty read, then a clean one.
+        dsl = FakeDsl(["", self.ROOM_TEXT])
+        name = _look_current_room_name(dsl, "look", retries=2, delay=0)
+        self.assertEqual(name, "The Temple Of Midgaard")
+
+    def test_returns_none_if_every_retry_is_empty(self):
+        dsl = FakeDsl(["", "", ""])
+        self.assertIsNone(_look_current_room_name(dsl, "look", retries=2, delay=0))
 
 
 if __name__ == "__main__":

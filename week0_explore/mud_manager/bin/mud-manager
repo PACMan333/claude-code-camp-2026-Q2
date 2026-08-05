@@ -388,6 +388,18 @@ module MudManagerMcp
 
     args = coerce_args(tool, raw_args)
     command = tool[:call].call(args)
+    # Discard any stale content still sitting in the buffer from before this
+    # command is even sent. Confirmed live: the server can split a response
+    # across more than one burst (documented in Session#login's own comments
+    # around drain_settled), and if the first burst alone already satisfies
+    # PROMPT_SENTINEL, the trailing burst is left unread -- sitting there
+    # until whatever tool call happens next, whose read_until_prompt then
+    # matches *that* leftover content instead of its own real response.
+    # Confirmed: this produced a byte-for-byte duplicate of the previous
+    # tool's response returned for an unrelated one. Anything still
+    # unread at the moment a new command is about to be sent can never
+    # legitimately belong to that command's response, so it's safe to drop.
+    session.drain
     session.send_command(command)
     text = session.read_until_prompt
     { is_error: false, text: text }
