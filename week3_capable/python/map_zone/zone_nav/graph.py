@@ -34,7 +34,11 @@ def load_zone(path=None) -> Dict[int, RoomInfo]:
     raw = json.loads(Path(path or DEFAULT_ZONE_PATH).read_text())
     graph = {}
     for id_str, data in raw.items():
-        exits = {d: t for d, t in data["exits"].items() if t is not None}
+        # Only real room ids are routable edges -- `None` (no exit) and
+        # "boundary" (a known cross-zone exit the crawl deliberately didn't
+        # follow, see scripts/crawl_zone.py's BOUNDARY_EXITS) are both
+        # non-navigable, excluded the same way.
+        exits = {d: t for d, t in data["exits"].items() if isinstance(t, int)}
         graph[int(id_str)] = RoomInfo(int(id_str), data["name"], exits, data.get("vnum"))
     return graph
 

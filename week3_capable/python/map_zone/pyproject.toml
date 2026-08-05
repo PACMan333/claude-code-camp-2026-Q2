@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "boukensha"
 version = "0.0.0"
-description = "Boukensha agent — Week 3 Capable: Tool Scoping"
+description = "Boukensha agent — Week 3 Capable: Map Zone (Northern Midgaard navigation)"
 requires-python = ">=3.9"
 # MCP servers bring their own dependencies; boukensha itself needs only
 # `textual`, for the TUI.
@@ -18,4 +18,4 @@ boukensha = "boukensha_loader:main"
 py-modules = ["boukensha_loader"]
 
 [tool.setuptools.packages.find]
-include = ["boukensha*"]
+include = ["boukensha*", "zone_nav*"]

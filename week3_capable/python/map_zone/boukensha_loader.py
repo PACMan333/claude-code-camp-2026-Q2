@@ -120,10 +120,14 @@ def load_and_start_repl() -> None:
     if no_tui:
         sys.argv.remove("--no-tui")
 
-    # Nothing else to pass: the agent's tools all come from settings.yaml's
-    # `mcp_servers:` block, so there is no MUD -- or any other tool -- to
-    # configure here.
-    boukensha.start_repl(tui=not no_tui)
+    # MCP tools (move/look/etc.) still come entirely from settings.yaml's
+    # `mcp_servers:` block. `goto_room` is the one local tool this package
+    # adds on top -- it's not an MCP server, it's app code that calls
+    # already-registered MCP tools internally (see zone_nav/tool.py), so it
+    # has to be wired in via register_tools instead.
+    import zone_nav.tool as zone_nav_tool
+
+    boukensha.start_repl(tui=not no_tui, register_tools=zone_nav_tool.register)
 
 
 def main() -> None:

@@ -21,7 +21,7 @@ mcp_servers:
       MUD_PASSWORD: helloworld
     tools:
       # Perception
-      look:            on
+      look:            off
       # Movement & posture
       move:            on
       enter:           off
@@ -67,7 +67,7 @@ mcp_servers:
       info_world:      off
       consider:        off
       diagnose:        off
-      list_commands:   on
+      list_commands:   off
       # Character / preferences / lifecycle
       social:          off
       set_title:       off
