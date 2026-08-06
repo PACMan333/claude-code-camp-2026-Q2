@@ -82,6 +82,19 @@ module Boukensha
       write_log(phase: "raw", data: data)
     end
 
+    def error(exc, where:, operation: nil, task: nil)
+      ErrorLog.log_error(exc, where: where, operation: operation, task: task, session_id: @session_id)
+      write_log(
+        phase: "error",
+        where: where,
+        operation: operation,
+        task: task,
+        error_class: exc.class.name,
+        error_message: exc.message,
+        backtrace: exc.backtrace || []
+      )
+    end
+
     def subscribe(&block)
       @subscribers ||= []
       @subscribers << block
@@ -98,7 +111,7 @@ module Boukensha
     end
 
     def write_log(event)
-      @log_io.puts JSON.generate(event.merge(session_id: @session_id, at: Time.now.iso8601))
+      @log_io.puts JSON.generate(event.merge(session_id: @session_id, at: Time.now.iso8601(6)))
       @log_io.flush
       @subscribers&.each { |s| s.call(event) }
     end

@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
+
+# Find the local package without a real `pip install`, mirroring every
+# other week3_capable/python/* app's bin/ script.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from logging_monitor.server import main  # noqa: E402
+
+main()

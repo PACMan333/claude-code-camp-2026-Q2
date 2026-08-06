@@ -1,0 +1,76 @@
+{% macro duration(entry) -%}
+{% if entry.duration_ms is not none %}<span class="entry-duration" title="time since previous log event">+{{ "%.1f"|format(entry.duration_ms) }}ms</span>{% endif %}
+{%- endmacro %}
+
+{% if entry.type == "turn" %}
+<div class="divider divider-ok">Turn {{ entry.turn }} {{ duration(entry) }}</div>
+
+{% elif entry.type == "user" %}
+<div class="msg msg-user" data-turn="{{ entry.turn }}" data-iteration="{{ entry.iteration }}">
+  <div class="msg-role">User {{ duration(entry) }}</div>
+  <div class="msg-body">{{ entry.text | text_html | safe }}</div>
+</div>
+
+{% elif entry.type == "reasoning" %}
+<div class="msg msg-reasoning">
+  <div class="msg-role">Reasoning{% if entry.redacted %} (redacted){% endif %} {{ duration(entry) }}</div>
+  <div class="msg-body">{{ entry.text | text_html | safe }}</div>
+</div>
+
+{% elif entry.type == "plan" %}
+<div class="msg msg-preamble">
+  <div class="msg-role">Plan {{ duration(entry) }}</div>
+  <div class="msg-body">{{ entry.text | text_html | safe }}</div>
+</div>
+
+{% elif entry.type == "assistant" %}
+<div class="msg msg-assistant" data-turn="{{ entry.turn }}" data-iteration="{{ entry.iteration }}">
+  <div class="msg-role">Assistant
+    <span class="usage">
+      {% if entry.input_tokens is not none %}ctx {{ entry.input_tokens | fmt_tokens }} / +{{ entry.output_tokens | fmt_tokens }} out{% endif %}
+      {% if entry.cost_usd is not none %}&mdash; ${{ "%.4f"|format(entry.cost_usd) }}{% endif %}
+      {% if entry.model %}&mdash; {{ entry.provider }}/{{ entry.model }}{% endif %}
+    </span>
+    {{ duration(entry) }}
+  </div>
+  <div class="msg-body">{{ entry.text | text_html | safe }}</div>
+</div>
+
+{% elif entry.type == "tool_call" %}
+<div class="tool-marker" data-turn="{{ entry.turn }}" data-iteration="{{ entry.iteration }}">
+  <span>&rarr; calling <code>{{ entry.tool_name }}</code>{% if entry.tool_args %}({% for k, v in entry.tool_args.items() %}{{ k }}: {{ v|string|truncate_flat(40) }}{% if not loop.last %}, {% endif %}{% endfor %}){% endif %}</span>
+  {{ duration(entry) }}
+</div>
+
+{% elif entry.type == "tool" %}
+<div class="tool-call {{ 'tool-error' if not entry.tool_ok else '' }}" data-turn="{{ entry.turn }}" data-iteration="{{ entry.iteration }}">
+  <div class="tool-name">
+    <span><code>{{ entry.tool_name }}</code>{% if not entry.tool_ok %} <span class="tool-badge">error</span>{% endif %}</span>
+    {{ duration(entry) }}
+  </div>
+  <pre class="tool-result">{{ entry.tool_result | ansi_html | safe }}</pre>
+</div>
+
+{% elif entry.type == "compaction" %}
+<div class="divider divider-compaction">Compacted context &mdash; dropped {{ entry.dropped }} of {{ entry.before }} messages {{ duration(entry) }}</div>
+
+{% elif entry.type == "limit_reached" %}
+<div class="divider divider-warn">Limit reached: {{ entry.kind }} ({{ entry.n }}/{{ entry.max }}) {{ duration(entry) }}</div>
+
+{% elif entry.type == "turn_end" %}
+<div class="divider {{ 'divider-ok' if entry.reason == 'completed' else 'divider-warn' }}">
+  Turn ended: {{ entry.reason }} &mdash; {{ entry.iterations }} iteration(s), {{ entry.tokens | fmt_tokens }} tokens {{ duration(entry) }}
+</div>
+
+{% elif entry.type == "error" %}
+<div class="msg msg-error" data-turn="{{ entry.turn }}" data-iteration="{{ entry.iteration }}">
+  <div class="msg-role">Error &mdash; {{ entry.error_class }} <span class="usage">{{ entry.where }}{% if entry.operation %} / {{ entry.operation }}{% endif %}</span> {{ duration(entry) }}</div>
+  <div class="msg-body">{{ entry.error_message }}</div>
+  {% if entry.backtrace %}
+  <details>
+    <summary>backtrace</summary>
+    <pre class="tool-result">{{ entry.backtrace | join("\n") | text_html | safe }}</pre>
+  </details>
+  {% endif %}
+</div>
+{% endif %}

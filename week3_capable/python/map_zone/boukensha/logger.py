@@ -1,6 +1,7 @@
 import json
 import re
 import secrets
+import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -99,6 +100,21 @@ class Logger:
 
         self._write_log({"phase": "raw", "data": data})
 
+    def error(self, exc, *, where, operation=None, task=None) -> None:
+        from . import error_log
+        error_log.log_error(
+            exc, where=where, operation=operation, task=task, session_id=self._session_id
+        )
+        self._write_log({
+            "phase": "error",
+            "where": where,
+            "operation": operation,
+            "task": task,
+            "error_class": type(exc).__name__,
+            "error_message": str(exc),
+            "backtrace": traceback.format_exception(type(exc), exc, exc.__traceback__),
+        })
+
     def subscribe(self, callback) -> None:
         self._subscribers.append(callback)
 
@@ -124,7 +140,7 @@ class Logger:
         )
 
     def _iso_now(self) -> str:
-        return datetime.now().astimezone().isoformat(timespec="seconds")
+        return datetime.now().astimezone().isoformat(timespec="microseconds")
 
     def _serialize_message(self, msg):
         return {"role": msg.role, "content": msg.content}

@@ -154,7 +154,8 @@ class Agent:
         self._context.add_message("user", self.WRAP_UP_DIRECTIVE)
         try:
             response = self._client.call(tools=[], max_output_tokens=self.WRAP_UP_OUTPUT_TOKENS)
-        except ApiError:
+        except ApiError as e:
+            self._logger.error(e, where="Agent._wrap_up", operation="api_call")
             msg = self._fallback_message(reason)
             self._logger.turn_end(reason=reason, iterations=self._iteration, tokens=self._context.turn_tokens)
             self._context.add_message("assistant", msg)
@@ -225,5 +226,6 @@ class Agent:
             except Exception as e:
                 result = "ERROR: {}: {}".format(type(e).__name__, e)
                 self._logger.tool_result(name=name, result=result, ok=False, error=str(e))
+                self._logger.error(e, where="Agent._handle_tool_calls", operation="tool_dispatch:{}".format(name))
 
             self._context.add_message("tool_result", str(result), tool_use_id=use_id)

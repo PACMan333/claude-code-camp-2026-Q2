@@ -289,7 +289,7 @@
     "desc": "The entrance hall to the thieves' and assassins' guild.  A place where you\ncan lose both your life and your money, if you are not careful.  To the north\nis the dark alley and to the east is the thieves' bar.\n[ Exits: n e ]",
     "exits": {
       "down": null,
-      "east": null,
+      "east": 60,
       "north": 19,
       "south": null,
       "up": null,
@@ -395,11 +395,12 @@
       "down": null,
       "east": 13,
       "north": 47,
-      "south": 13,
+      "south": 57,
       "up": null,
       "west": 48
     },
-    "name": "Main Street"
+    "name": "Main Street",
+    "vnum": 3012
   },
   "41": {
     "desc": "You are at the levee.  South of here you see the river gently flowing west.\nThe river bank is very low making it possible to enter the river.\n[ Exits: n s ]",
@@ -433,7 +434,7 @@
       "down": null,
       "east": 36,
       "north": 51,
-      "south": 51,
+      "south": 62,
       "up": null,
       "west": null
     },
@@ -500,7 +501,7 @@
       "north": null,
       "south": 51,
       "up": null,
-      "west": 51
+      "west": 63
     },
     "name": "Inside The West Gate Of Midgaard",
     "vnum": 3040
@@ -536,12 +537,13 @@
     "exits": {
       "down": null,
       "east": null,
-      "north": 43,
+      "north": 48,
       "south": 43,
       "up": null,
       "west": null
     },
-    "name": "Wall Road"
+    "name": "Wall Road",
+    "vnum": 3042
   },
   "54": {
     "desc": "This is the practice yard of the fighters.  To the north is the bar.\nA well leads down into darkness.\n[ Exits: n d ]",
@@ -556,6 +558,71 @@
     "name": "The Tournament And Practice Yard",
     "vnum": 3023
   },
+  "55": {
+    "desc": "The bar is one of the finest in the land, lucky it is members only.  Fine\nfurniture is set all around the room.  A small sign is hanging on the wall.\n[ Exits: s w ]",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": null,
+      "south": 9,
+      "up": null,
+      "west": 56
+    },
+    "name": "The Bar Of Divination",
+    "vnum": 3003
+  },
+  "56": {
+    "desc": "This is the inner sanctum.  A picture of the mighty Thor, is hanging on\nthe wall, just above the altar which is set against the western wall.  A well\nin the middle of the floor leads down into darkness.  Vile smells waft from\nthe depths.\n[ Exits: e d ]",
+    "exits": {
+      "down": "boundary",
+      "east": 55,
+      "north": null,
+      "south": null,
+      "up": null,
+      "west": null
+    },
+    "name": "The Clerics' Inner Sanctum",
+    "vnum": 3002
+  },
+  "57": {
+    "desc": "The entrance hall to this guild is a small, poor lighted room.\n[ Exits: n s ]",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": 40,
+      "south": 58,
+      "up": null,
+      "west": null
+    },
+    "name": "The Entrance To The Mages' Guild",
+    "vnum": 3017
+  },
+  "58": {
+    "desc": "The bar is one of the weirdest in the land.  Mystical images float around\nthe air.  Illusions of fine furniture appear all around the room.\n[ Exits: n e ]",
+    "exits": {
+      "down": null,
+      "east": 59,
+      "north": 57,
+      "south": null,
+      "up": null,
+      "west": null
+    },
+    "name": "The Mages' Bar",
+    "vnum": 3018
+  },
+  "59": {
+    "desc": "This is the Magical Experiments Laboratory.  Dark smoke-stained stones arch\nover numerous huge oaken tables, most of these cluttered with strange- looking\npipes and flasks.  The floor is covered with half-erased pentagrams and even\nweirder symbols, and a blackboard in a dark corner has only been partially\ncleaned, some painful-looking letters faintly visible.\n[ Exits: w ]",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": null,
+      "south": null,
+      "up": null,
+      "west": 58
+    },
+    "name": "The Mages' Laboratory",
+    "vnum": 3019
+  },
   "6": {
     "desc": "You are on a dirt path leading away from the Temple Altar which is south\nof here.  To the north, the path continues through the lush contryside of\nMidgaard towards the Dragonhelm Mountains far off to the north.\n[ Exits: n s ]",
     "exits": {
@@ -568,6 +635,71 @@
     },
     "name": "Behind The Temple Altar",
     "vnum": 3059
+  },
+  "60": {
+    "desc": "The bar of the thieves.  Once upon a time this place was beautifully\nfurnished, but now it seems almost empty.  To the south is the yard, and to\nthe west is the entrance hall.\n(Maybe the furniture has been stolen?!)\n[ Exits: s w ]",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": null,
+      "south": 61,
+      "up": null,
+      "west": 33
+    },
+    "name": "The Thieves' Bar",
+    "vnum": 3028
+  },
+  "61": {
+    "desc": "The secret practice yard of thieves and assassins.  To the north is the\nbar.  A well leads down into darkness.\n[ Exits: n d ]",
+    "exits": {
+      "down": "boundary",
+      "east": null,
+      "north": 60,
+      "south": null,
+      "up": null,
+      "west": null
+    },
+    "name": "The Secret Yard",
+    "vnum": 3029
+  },
+  "62": {
+    "desc": "You are standing on the road next to the western city wall, which\ncontinues north.  South of here is a bridge across the river.\n[ Exits: n s ]",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": 43,
+      "south": 64,
+      "up": null,
+      "west": null
+    },
+    "name": "Wall Road",
+    "vnum": 3047
+  },
+  "63": {
+    "desc": "You are by two small towers that have been built into the city wall and\nconnected with a footbridge across the heavy wooden gate.  To the west you\ncan see the edge of a big forest.\n[ Exits: e w ]",
+    "exits": {
+      "down": null,
+      "east": 48,
+      "north": null,
+      "south": null,
+      "up": null,
+      "west": "boundary"
+    },
+    "name": "Outside The West Gate Of Midgaard",
+    "vnum": 3052
+  },
+  "64": {
+    "desc": "You are standing on the stone bridge crosses the river.  The bridge is\nbuilt out from the western city wall and the river flows west through an\nopening in the wall ten feet below the bridge.\n[ Exits: n s ]",
+    "exits": {
+      "down": null,
+      "east": null,
+      "north": 62,
+      "south": "boundary",
+      "up": null,
+      "west": null
+    },
+    "name": "On The Bridge",
+    "vnum": 3051
   },
   "7": {
     "desc": "You are standing on the market square, the famous Square of Midgaard.\nA large, peculiar looking statue is standing in the middle of the square.\nRoads lead in every direction, north to the temple square, south to the\ncommon square, east and westbound is the main street.\n[ Exits: n e s w ]",
@@ -600,7 +732,7 @@
     "exits": {
       "down": null,
       "east": 3,
-      "north": null,
+      "north": 55,
       "south": null,
       "up": null,
       "west": null

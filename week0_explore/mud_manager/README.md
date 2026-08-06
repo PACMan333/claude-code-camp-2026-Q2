@@ -57,6 +57,29 @@ using:
 A spawning MCP host passes these as the server entry's `env`, per the
 stdio transport convention.
 
+### Every command is logged, and a bad request can't kill the server
+
+Every `tools/call` — the command sent, the raw response read back, timing,
+and (on failure) the full exception class/message/backtrace — is appended
+to a durable JSONL log, one line per event:
+
+| Variable | Default | |
+|---|---|---|
+| `MUD_MANAGER_LOG_DIR` | `log/` next to this gem | destination directory; the file itself is `mud_manager.jsonl` |
+
+Logging is **on by default**, not opt-in: even with `MUD_MANAGER_LOG_DIR`
+unset it still writes to a local `log/` directory, so command visibility
+never silently depends on a host wiring an env var correctly. Point
+`MUD_MANAGER_LOG_DIR` at a shared `.boukensha` directory to browse the log
+with `week3_capable/python/logging_monitor`'s `/mud` page.
+
+Separately, any exception that escapes a request's own handling — not just
+the `ArgumentError`/`Session::Error` cases `call_tool` already rescues — is
+caught by a blanket rescue around the dispatch loop in `run`, logged the
+same way (with `fatal: true`), and answered with a normal JSON-RPC error
+response instead of crashing the whole MCP subprocess. See
+`lib/mud_manager/jsonl_log.rb`.
+
 ### Minimal client sketch (any language)
 
 ```

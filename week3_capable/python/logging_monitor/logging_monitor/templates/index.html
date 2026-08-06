@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Sessions — Logging Monitor{% endblock %}
+{% block content %}
+<h1>Sessions</h1>
+<p class="meta">{{ boukensha_dir }}/sessions</p>
+
+{% if not sessions %}
+<p class="empty">No sessions found.</p>
+{% else %}
+<table class="sessions">
+  <thead>
+    <tr>
+      <th>Session</th>
+      <th>Started</th>
+      <th>Task</th>
+      <th>Model</th>
+      <th class="nowrap">Turns</th>
+      <th class="nowrap">Tool calls</th>
+      <th class="nowrap">Errors</th>
+      <th class="nowrap">Tokens (in/out)</th>
+      <th class="nowrap">Cost</th>
+      <th class="nowrap">Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in sessions %}
+    <tr>
+      <td><a href="/sessions/{{ s.id }}">{{ s.id }}</a></td>
+      <td class="nowrap">{{ s.started_at or "?" }}</td>
+      <td class="task-cell">{{ s.task | truncate_flat(90) if s.task else "" }}</td>
+      <td class="model-list">{{ [s.provider, s.model] | select | join(" / ") }}</td>
+      <td class="nowrap">{{ s.turn_count }}</td>
+      <td class="nowrap">{{ s.tool_call_count }}</td>
+      <td class="nowrap">{% if s.error_count %}<span class="limit-flag">{{ s.error_count }}</span>{% else %}0{% endif %}</td>
+      <td class="nowrap">{{ s.total_input_tokens | fmt_tokens }} / {{ s.total_output_tokens | fmt_tokens }}</td>
+      <td class="nowrap">{{ s.cost_usd | fmt_cost }}</td>
+      <td class="nowrap">{% if s.total_duration_ms %}{{ "%.1f"|format(s.total_duration_ms / 1000.0) }}s{% else %}?{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}MUD Log — Logging Monitor{% endblock %}
+{% block content %}
+<h1>Raw MUD Command Log</h1>
+<p class="meta">Every command mud_manager sent to the live MUD and the raw response it read back, with timing. See lib/mud_manager/jsonl_log.rb.</p>
+
+{% if not entries %}
+<p class="empty">No commands logged yet.</p>
+{% else %}
+<div class="error-list">
+  {% for e in entries %}
+  {# Entries come straight from mud_manager.jsonl, one dict per JsonlLog#write
+     call -- and each call site (success / rescue / fatal, bin/mud-manager's
+     call_tool) merges a different subset of keys. A plain e.key lookup on a
+     genuinely absent key returns Jinja's Undefined (truthy-checkable but not
+     `is none`), not Python None -- .get(...) is what actually gives None. #}
+  <div class="tool-call {{ 'tool-error' if e.get('error_class') else '' }}">
+    <div class="tool-name">
+      <span>
+        {% if e.get('fatal') %}<span class="tool-badge">fatal</span>{% endif %}
+        <code>{{ e.get('tool') or '?' }}</code>
+        {% if e.get('verb') %}&mdash; <code>{{ e.get('raw') or e.get('verb') }}</code>{% endif %}
+        {% if e.get('error_class') %} <span class="tool-badge">{{ e.get('error_class') }}</span>{% endif %}
+      </span>
+      <span class="usage">{{ e.get('at') }}{% if e.get('duration_ms') is not none %} &mdash; {{ e.get('duration_ms') }}ms{% endif %}</span>
+    </div>
+    {% if e.get('response') is not none %}
+    <pre class="tool-result">{{ e.get('response') | ansi_html | safe }}</pre>
+    {% elif e.get('error_message') %}
+    <pre class="tool-result">{{ e.get('error_message') }}</pre>
+    {% if e.get('backtrace') %}
+    <details>
+      <summary>backtrace</summary>
+      <pre class="tool-result">{{ e.get('backtrace') | join("\n") | text_html | safe }}</pre>
+    </details>
+    {% endif %}
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

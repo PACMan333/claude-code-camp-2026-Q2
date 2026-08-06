@@ -176,8 +176,10 @@ class Repl:
             self._output("")
             self._output(result)
         except LoopError as e:
+            self._logger.error(e, where="Repl.run_turn", operation="agent_run")
             self._output("\n[error] {}".format(e))
         except ApiError as e:
+            self._logger.error(e, where="Repl.run_turn", operation="agent_run")
             self._output("\n[error] API call failed: {}".format(e))
 
     def start(self) -> None:

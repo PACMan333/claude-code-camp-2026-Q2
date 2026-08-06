@@ -310,3 +310,13 @@ BOUKENSHA_PATH=~/Sites/boukensha/12_context boukensha --no-tui
 ```sh
 rake test
 ```
+
+## Errors are now also durably logged
+
+Any exception `Logger#error` sees (MCP server startup failures, `ApiError`
+during wind-down, a failed tool dispatch, REPL/TUI loop errors) is written
+both inline in this session's own JSONL log and to
+`<BOUKENSHA_DIR>/errors.jsonl`, a durable log shared across every session
+(Python and Ruby alike). Browse it, along with a live-tailing view of any
+session's transcript and a per-turn timing waterfall, with
+`week3_capable/python/logging_monitor` (see its own README).

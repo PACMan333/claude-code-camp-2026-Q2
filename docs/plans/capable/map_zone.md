@@ -553,19 +553,24 @@ takes the previously-curated "3 tools only" set to 4.
    real `.wld` file (the only source of real vnums found anywhere in this
    repo) — confirm, or point at a different source if one exists that
    wasn't found.
-2. **Blind 6-direction probing vs. parsing the `[ Exits: ... ]` line** —
+- yes, I am referring to the doc circlemud-world-parser   
+2. **Blind 6-direction proSbing vs. parsing the `[ Exits: ... ]` line** —
    this plan chose the slower-but-format-independent probing approach
    (Design section 1). Acceptable, or is minimizing MUD round-trips during
    the crawl worth the fragility of depending on exact exits-line text?
+- parse the exits
 3. **`RunDSL.dispatch()`** is a small addition to a `boukensha` core file
    (Design section 7), not app-level code. Fine to extend, or should
    `goto_room` avoid it and only be wired up manually (meaning it would
    work from `examples/goto_demo.py` but *not* from `bin/boukensha`)?
+- fine to extend
 4. **Editing the shared `.boukensha/settings.yaml` again** (`look: off` →
    `on`, Design section 9) takes `tool_scoping`'s curated "3 tools only"
    demo to 4 tools. Acceptable, same tradeoff already made once before?
+- yes, turn look on
 5. **If the crawler gets stuck** (Design section 2's `CrawlStuckError`),
    this plan's answer is "use `week3_capable/bin/reset` to recover
    manually and re-run" rather than fully automated recovery. Enough, or
    should the crawler attempt automatic recovery (e.g. shelling out to
    `reset` itself) when it detects it's stuck?
+- a re-run after a reset should continue filling in whatever wasn't reached yet is an acceptable aproach

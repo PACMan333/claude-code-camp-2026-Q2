@@ -274,6 +274,7 @@ module Boukensha
       rescue Interrupt
         @events << { phase: :turn_interrupted }
       rescue => e
+        @repl.logger.error(e, where: "Tui#turn_thread", operation: "run_turn")
         @events << { phase: :turn_error, error: e.message }
       ensure
         @events << { phase: :turn_complete }

@@ -331,6 +331,7 @@ class Tui(App):
         try:
             self._repl.run_turn(text)
         except Exception as e:  # noqa: BLE001 -- mirrors Ruby's bare `rescue`
+            self._repl.logger.error(e, where="Tui._run_turn_worker", operation="run_turn")
             self._events.put({"phase": "turn_error", "error": str(e)})
         finally:
             self._events.put({"phase": "turn_complete"})

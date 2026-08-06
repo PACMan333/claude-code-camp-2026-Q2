@@ -133,8 +133,10 @@ module Boukensha
       output("")
       output(result)
     rescue LoopError => e
+      @logger.error(e, where: "Repl#run_turn", operation: "agent_run")
       output("\n[error] #{e.message}")
     rescue ApiError => e
+      @logger.error(e, where: "Repl#run_turn", operation: "agent_run")
       output("\n[error] API call failed: #{e.message}")
     end
 

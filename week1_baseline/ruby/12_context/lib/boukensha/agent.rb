@@ -115,7 +115,8 @@ module Boukensha
       @logger.turn_end(reason: reason, iterations: @iteration, tokens: @context.turn_tokens)
       @context.add_message(:assistant, text)
       text
-    rescue ApiError
+    rescue ApiError => e
+      @logger.error(e, where: "Agent#wrap_up", operation: "api_call")
       msg = fallback_message(reason)
       @logger.turn_end(reason: reason, iterations: @iteration, tokens: @context.turn_tokens)
       @context.add_message(:assistant, msg)
@@ -170,6 +171,7 @@ module Boukensha
         rescue StandardError => e
           result = "ERROR: #{e.class}: #{e.message}"
           @logger.tool_result(name: name, result: result, ok: false, error: e.message)
+          @logger.error(e, where: "Agent#handle_tool_calls", operation: "tool_dispatch:#{name}")
         end
 
         @context.add_message(:tool_result, result.to_s, tool_use_id: use_id)

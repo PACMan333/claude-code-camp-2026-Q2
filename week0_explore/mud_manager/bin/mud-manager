@@ -334,6 +334,19 @@ module MudManagerMcp
 
   TOOLS_BY_NAME = TOOLS.each_with_object({}) { |t, h| h[t[:name]] = t }.freeze
 
+  # ---- raw command log --------------------------------------------------
+
+  # On by default, not opt-in: falls back to a log/ directory inside
+  # mud_manager itself (sibling to bin/lib) if MUD_MANAGER_LOG_DIR isn't
+  # set, so command logging works out of the box even without boukensha
+  # wiring anything. Pointing MUD_MANAGER_LOG_DIR at the shared .boukensha
+  # directory is what makes it show up unified in logging_monitor.
+  def self.mud_log
+    @mud_log ||= MudManager::JsonlLog.new(
+      File.join(ENV["MUD_MANAGER_LOG_DIR"] || File.expand_path("../../log", __dir__), "mud_manager.jsonl")
+    )
+  end
+
   # ---- MUD session (lazy) --------------------------------------------------
 
   def self.session
@@ -346,6 +359,25 @@ module MudManagerMcp
       s.login(ENV.fetch("MUD_NAME"), ENV.fetch("MUD_PASSWORD"))
       s
     end
+  end
+
+  # Log off cleanly instead of letting the OS slam the socket shut on process
+  # exit. An abrupt close leaves the character link-dead in the game world
+  # rather than logged out, which is what let a leftover boukensha run's MUD
+  # session collide with the next run's fresh login (the next run's `login`
+  # only knows the "enter name -> Password:" flow for an already-logged-off
+  # character, not whatever prompt a still-connected duplicate provokes).
+  # Best-effort: the socket may already be dead, and @session may never have
+  # been opened at all (no tool call ever triggered a login).
+  def self.close_session
+    return unless @session&.open?
+
+    @session.send_command(MudManager::Primitives.quit)
+    @session.read_until_quiet(0.5, timeout: 2.0)
+  rescue MudManager::Session::Error
+    # already broken — nothing left to clean up
+  ensure
+    @session&.close
   end
 
   # ---- MCP protocol ---------------------------------------------------------
@@ -400,12 +432,17 @@ module MudManagerMcp
     # unread at the moment a new command is about to be sent can never
     # legitimately belong to that command's response, so it's safe to drop.
     session.drain
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     session.send_command(command)
     text = session.read_until_prompt
+    mud_log.write(tool: name, args: args, verb: command.verb, raw: command.raw,
+                  response: text, duration_ms: ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000).round(1))
     { is_error: false, text: text }
   rescue ArgumentError => e
+    mud_log.write(tool: name, args: args, error_class: e.class.name, error_message: e.message, backtrace: e.backtrace)
     { is_error: true, text: "argument_error: #{e.message}" }
   rescue MudManager::Session::Error => e
+    mud_log.write(tool: name, args: args, error_class: e.class.name, error_message: e.message, backtrace: e.backtrace)
     { is_error: true, text: "session_error: #{e.class}: #{e.message}" }
   end
 
@@ -454,8 +491,16 @@ module MudManagerMcp
       rescue JSON::ParserError
         next
       end
-      handle(msg)
+
+      begin
+        handle(msg)
+      rescue StandardError => e
+        mud_log.write(fatal: true, error_class: e.class.name, error_message: e.message, backtrace: e.backtrace)
+        respond(msg["id"], "error" => { "code" => -32603, "message" => "internal_error: #{e.class}: #{e.message}" }) if msg["id"]
+      end
     end
+  ensure
+    close_session
   end
 
   USAGE = <<~USAGE
@@ -487,6 +532,13 @@ module MudManagerMcp
       warn USAGE
       return 1
     end
+
+    # Untrapped SIGTERM kills the process immediately, skipping run's `ensure`
+    # — trap it so a parent that kills this process group (rather than just
+    # closing our stdin) still unwinds through close_session instead of
+    # abandoning a live MUD login. SIGINT already raises Interrupt by
+    # default, which run's ensure catches on its way out.
+    Signal.trap("TERM") { exit }
 
     run
     0

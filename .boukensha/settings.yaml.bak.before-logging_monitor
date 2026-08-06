@@ -19,7 +19,6 @@ mcp_servers:
       MUD_PORT:     "4000"
       MUD_NAME:     dummy
       MUD_PASSWORD: helloworld
-      MUD_MANAGER_LOG_DIR: /home/p_coz/Claude/claude-code-camp-2026-Q2/.boukensha
     tools:
       # Perception
       look:            on

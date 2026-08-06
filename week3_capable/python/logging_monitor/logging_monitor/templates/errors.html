@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Errors — Logging Monitor{% endblock %}
+{% block content %}
+<h1>Errors</h1>
+<p class="meta">
+  Every meaningful rescue/except in boukensha (Python + Ruby) writes here
+  durably, across sessions -- plus every genuine exception mud_manager's
+  own command log recorded (bad arity, session errors), merged in from
+  <a href="/mud">the raw MUD command log</a> since mud_manager has no
+  dependency on boukensha and logs to its own file.
+</p>
+
+{% if not errors %}
+<p class="empty">No errors logged. Good.</p>
+{% else %}
+<div class="error-list">
+  {% for e in errors %}
+  <div class="msg msg-error">
+    <div class="msg-role">
+      {{ e.error_class }}
+      <span class="source-badge source-{{ e.source }}">{{ e.source }}</span>
+      <span class="usage">{{ e.at }}</span>
+    </div>
+    <div class="msg-body">{{ e.error_message }}</div>
+    <div class="meta" style="margin-top: 0.4rem;">
+      where: <code>{{ e.where }}</code>
+      {% if e.operation %} &mdash; operation: <code>{{ e.operation }}</code>{% endif %}
+      {% if e.task %} &mdash; task: <code>{{ e.task }}</code>{% endif %}
+      {% if e.session_id %} &mdash; <a href="/sessions/{{ e.session_id }}">session {{ e.session_id }}</a>{% endif %}
+      {% if e.source == "mud_manager" %} &mdash; <a href="/mud">raw MUD command log</a>{% endif %}
+    </div>
+    {% if e.backtrace %}
+    <details>
+      <summary>backtrace</summary>
+      <pre class="tool-result">{{ e.backtrace | join("\n") | text_html | safe }}</pre>
+    </details>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

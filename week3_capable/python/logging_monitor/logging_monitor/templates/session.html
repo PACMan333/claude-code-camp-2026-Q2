@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block title %}{{ session.id }} — Logging Monitor{% endblock %}
+{% block content %}
+<a href="/" class="back">&larr; All sessions</a>
+<h1>{{ session.id }}</h1>
+{% if session.first_task() %}
+<p class="task-line">{{ session.first_task() | text_html | safe }}</p>
+{% endif %}
+<p class="meta">
+  started {{ session.started_at or "?" }}
+  &mdash; {{ session.snapshot.get("provider") }}/{{ session.snapshot.get("model") }}
+  &mdash; <span id="live-indicator" class="live-indicator live-connecting">connecting…</span>
+</p>
+
+<div class="waterfall-wrap">
+  <div class="waterfall-title">Waterfall &mdash; where each turn spent its time (hover a bar for details, click to jump to it below)</div>
+  <div id="waterfall-container">{{ waterfall_svg | safe }}</div>
+</div>
+
+<div class="transcript" id="transcript">
+{% for entry in session.entries %}
+{% include "_entry.html" %}
+{% endfor %}
+</div>
+
+<script>
+(function () {
+  var container = document.getElementById("waterfall-container");
+  container.addEventListener("click", function (ev) {
+    var row = ev.target.closest("[data-turn]");
+    if (!row) return;
+    var target = document.querySelector('.transcript [data-turn="' + row.dataset.turn + '"]');
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  var indicator = document.getElementById("live-indicator");
+  var transcript = document.getElementById("transcript");
+  var source = new EventSource(window.location.pathname + "/stream");
+
+  source.onopen = function () {
+    indicator.textContent = "live";
+    indicator.className = "live-indicator live-on";
+  };
+  source.onerror = function () {
+    indicator.textContent = "disconnected";
+    indicator.className = "live-indicator live-off";
+  };
+  var waterfallRefreshTimer = null;
+  function scheduleWaterfallRefresh() {
+    // Debounced: several transcript entries can land in the same ~500ms
+    // poll tick (e.g. a tool_call + its tool_result), each firing
+    // onmessage separately -- coalesce into one /waterfall fetch instead
+    // of one per entry.
+    if (waterfallRefreshTimer) return;
+    waterfallRefreshTimer = setTimeout(function () {
+      waterfallRefreshTimer = null;
+      fetch(window.location.pathname + "/waterfall")
+        .then(function (r) { return r.text(); })
+        .then(function (svg) { container.innerHTML = svg; })
+        .catch(function () {});
+    }, 300);
+  }
+
+  source.onmessage = function (event) {
+    var wrapper = document.createElement("div");
+    wrapper.innerHTML = event.data;
+    var atBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 60);
+    while (wrapper.firstChild) transcript.appendChild(wrapper.firstChild);
+    if (atBottom) window.scrollTo(0, document.body.scrollHeight);
+
+    // A new transcript entry means the session is still active -- refresh
+    // the waterfall so newly-completed spans show up without a reload.
+    scheduleWaterfallRefresh();
+  };
+})();
+</script>
+{% endblock %}

@@ -99,6 +99,8 @@ def _register_mcp_servers(registry, cfg):
         except tools_mcp.CollisionError:
             raise
         except Exception as e:
+            from . import error_log
+            error_log.log_error(e, where="_register_mcp_servers", operation="mcp_server_startup:{}".format(name))
             if entry["required"]:
                 raise RuntimeError("boukensha: MCP server '{}' failed to start: {}".format(name, e)) from e
             print(

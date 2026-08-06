@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logging_monitor"
+version = "0.0.0"
+description = "Week 3 (Capable) — unified observability app: sessions, errors, raw MUD command log, waterfall"
+requires-python = ">=3.9"
+dependencies = ["flask"]
+
+[project.scripts]
+logging-monitor = "logging_monitor.server:main"
+
+[tool.setuptools.packages.find]
+include = ["logging_monitor*"]
