@@ -60,19 +60,21 @@ It created an index list of all the rooms also:
 ## Technical Conclusions
 Learning more about the API call details and limiting the amount of tools listed in the API payload raally did use a lot less tokens than previously.  Creating a Python dictionary file with all the rooms and how to reach them by crawling through the whole Northern Midgaard Zone really speed up the time it took to get to a room and this improvement really saved on token use also.  
 
-How to run the python boukensha app:
+### How to run the python boukensha app:
 
-C:/Claude/claude-code-camp-2026-Q2/ source .venv/bin/activate
-(.venv) C:/Claude/claude-code-camp-2026-Q2$ boukensha
+C:~/Claude/claude-code-camp-2026-Q2/ source .venv/bin/activate
+
+(.venv) C:~/Claude/claude-code-camp-2026-Q2$ boukensha
 
 
-.boukensharc file:
+### .boukensharc file:
 
 boukensha_path: /Claude/claude-code-camp-2026-Q2/week3_capable/python/map_zone
+
 boukensha_dir: /Claude/claude-code-camp-2026-Q2/.boukensha
 
 
-How to run the logging monitor app:
+### How to run the logging monitor app:
 
 (.venv) C:~/Claude/claude-code-camp-2026-Q2/week3_capable/python/logging_monitor$ ./bin/logging_monitor
 
