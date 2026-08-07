@@ -62,8 +62,8 @@ Learning more about the API call details and limiting the amount of tools listed
 
 How to run the python boukensha app:
 
-C:~/Claude/claude-code-camp-2026-Q2/ source .venv/bin/activate
-(.venv) C:~/Claude/claude-code-camp-2026-Q2$ boukensha
+C:/Claude/claude-code-camp-2026-Q2/ source .venv/bin/activate
+(.venv) C:/Claude/claude-code-camp-2026-Q2$ boukensha
 
 
 .boukensharc file:
