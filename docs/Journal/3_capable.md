@@ -2,24 +2,24 @@
 
 
 ## Technical Goal
-The technical goal in this week of the bootcamp is to get the Agent to be able to find the bakery in the least amouint of moves and tokens.
+The technical goal in this week of the bootcamp is to get the Agent to be able to find the bakery in the least amount of moves and tokens.
 
 ## Technical Uncertainty
-Can we get less token use from the MUD Agent to Claude?  Can we find the Bakery in less steps?
+Can we get less token use from the MUD Agent to Claude?  Can we find the Bakery in the least amount of moves?
 
 ## Technical Hypotheses 
 I think with settting up a smaller payload in the API calls to Claude by limiting the command payload will use less tokens, creating a BFS linked Python dictionary file of all the rooms that the MUD Agent can find will help make it easier for the Agent to find locations in the MUD faster and save in token use.
 
 ## Technical Observerations
-Updated the settings.yaml file to include all the tools that I want Claude to use with a yes/no keyword, this is setup now with just 3 necessary commands, not all 55, in each API call payload now.  This will use less API tokens on each API call now.  You can see this change by the MUD(#) that lists the tools loaded now:
+Updated the settings.yaml file to include all the tools that will allow Claude to use with a yes/no keyword, this was tested with just 3 necessary commands, not all 55, in each API call payload.  This will use less API tokens on each API call now.  You can see this change by the MUD(#) that lists the tools loaded now in the GUI interface:
 
 ![BK Tools list screen shot](image-8.png)
 
-Created a reset script so the player can be reset back to the start room, The Temple of Midgaard.  This is handy for when Claude is manually mapping the MUD and if it gets stuck somewhere it can call the reset script to go back at the start room.  Here is what the reset script will produce on the screen when it runs:
+Created a reset script so the player can be reset back to the start room, The Temple of Midgaard.  This is handy for when Claude is manually mapping the MUD and if it gets stuck somewhere it can call the reset script to go back at the start room and start mapping again.  Here is what the reset script will produce on the screen when it runs:
 
 ![Reset Output screen shot](image-10.png)
 
-Created a mapping tool to manually crawl and map the Northern Midgaard Zone with a BFS search order.  This creates a python dictionary file that can be loaded into memory so it can find things quickly.  While doing the mannual mapping the player keep getting exhausted and could not continue seraching, Claude found the restore command: via an admin session restore fully refills movement points (83/83). This resolved the issue when the player could not continue on mapping rooms.  The look and list commands also had to be turned on in the settings.yaml file for things to work, so there are only 6 tools loaded now.  The Agent can now find the Bakery quickly, here is a screen shot of this request now:
+Created a mapping tool to manually crawl and map the Northern Midgaard Zone with a BFS search order.  This creates a python dictionary file that can be loaded into memory so it can find things quickly.  While doing the mannual mapping the player keep getting exhausted and could not continue seraching, Claude found the restore command: via an admin session restore fully refills movement points (83/83). This resolved the issue when the player could not continue mapping rooms.  The look and list and shop commands also had to be turned on in the settings.yaml file for things to work, so there are only 6 tools loaded now.  The Agent can now find the Bakery quickly, here is a screen shot of this request now:
 
 ![Screen Shot of Bakery Iteration](image-9.png)
 
@@ -35,7 +35,7 @@ and a MUD log tab that lists all the mud_manager commands sent and the raw respo
 
 ![MUD log tab](image-13.png)
 
-when you click on a session file you get all the details and a waterfall diagrsm showing any of the session details:
+when you click on a session file you get all the details and a waterfall diagrsm showing many of the session details:
 
 ![session file details](image-14.png)
 
@@ -58,12 +58,11 @@ It created an index list of all the rooms also:
 ![Room Index List](<Northern Midgaard Room Index.jpg>)
 
 ## Technical Conclusions
-Learning more about the API calls and limiting the amount of tools listed in the API payload raally did use a lot less tokens than previously.  Creating a Python dictionary file with all the rooms and how to reach them by crawling through the whole Northern Midgaard Zone really speed up the time it took to get to a room and this improvement really saved on token use also.  
+Learning more about the API call details and limiting the amount of tools listed in the API payload raally did use a lot less tokens than previously.  Creating a Python dictionary file with all the rooms and how to reach them by crawling through the whole Northern Midgaard Zone really speed up the time it took to get to a room and this improvement really saved on token use also.  
 
 How to run the python boukensha app:
 
-C:~/Claude$  source /home/Claude/claude-code-camp-2026-Q2/.venv/bin/activate
-(.venv) C:~/Claude$ cd claude-code-camp-2026-Q2/
+C:~/Claude/claude-code-camp-2026-Q2/ source .venv/bin/activate
 (.venv) C:~/Claude/claude-code-camp-2026-Q2$ boukensha
 
 
@@ -81,4 +80,4 @@ Connect on http://localhost:4568
 
 
 ## Key Takeaway
-Know how an API call works before you use it, how much data goes into the payload when communicating with an LLM so you will know what kind of costs will be required for each API call.
+Know how an API call works before you use it, how much data goes into the payload when communicating with an LLM so you will know what kind of costs will be required for each API call.  Knowing this information can save you a lot of money.
